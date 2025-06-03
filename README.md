@@ -54,30 +54,6 @@ The plugin is highly configurable. Check the `config.yml` file for all available
 - Added better error handling and debugging options
 - Enhanced JavaDoc documentation throughout the codebase
 
-## Updates in Version 4.0.0
-
-- Updated to support Minecraft versions 1.8 - 1.21.5
-- Removed legacy code for pre-1.8 versions
-- Updated to Java 17 for better performance and compatibility
-- Modernized codebase for better stability and efficiency
-- Updated Maven plugins and dependencies
-- Improved error handling and logging
-
-## Installation
-
-1. Download the latest version of ClearLag
-2. Place the JAR file in your server's `plugins` folder
-3. Restart your server
-4. Configure the plugin to your liking by editing the `config.yml` file
-
-## Support
-
-If you encounter any issues or have questions, please open an issue on the GitHub repository.
-
-## License
-
-This project is licensed under the terms of the included LICENSE file.
-
 ## History
 
 Clearlag has been around since 2011 and has evolved over the years to keep up with Minecraft's changes. The plugin was originally designed for older versions of Minecraft but has been continuously updated to support the latest versions.
