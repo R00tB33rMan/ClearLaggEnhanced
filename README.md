@@ -45,15 +45,6 @@ ClearLag is a powerful and efficient lag reduction plugin for Minecraft servers,
 
 The plugin is highly configurable. Check the `config.yml` file for all available options.
 
-## Updates in Version 4.1.0
-
-- Implemented enum-based configuration system for improved type safety and maintainability
-- Modernized update checker with GitHub API integration and better error handling
-- Enhanced material handling with improved backward compatibility
-- Improved async operations with CompletableFuture
-- Added better error handling and debugging options
-- Enhanced JavaDoc documentation throughout the codebase
-
 ## History
 
 Clearlag has been around since 2011 and has evolved over the years to keep up with Minecraft's changes. The plugin was originally designed for older versions of Minecraft but has been continuously updated to support the latest versions.
