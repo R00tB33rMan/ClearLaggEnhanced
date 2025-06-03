@@ -62,27 +62,30 @@ public class AttributeParser {
                 attribute = new EntityOnGroundAttribute();
             else if (tok.startsWith("id=") || tok.startsWith("material=")) {
 
-                if (t == EntityType.DROPPED_ITEM) {
+                if (t == EntityType.ITEM) {
 
-                    String input = tok.substring(3);
+                    String input = tok.substring(tok.startsWith("id=") ? 3 : 9); // Adjust substring based on prefix
                     Material mat = null;
 
-                    if (Util.isInteger(input)) {
+                    // First try direct lookup (case-sensitive, for enum names)
+                    mat = Material.getMaterial(input.toUpperCase());
 
-                        int id = Integer.parseInt(input);
-
-                        Util.warning("ID's are no longer usable in your Spigot version - Please change \"" + id + "\" into the item/block's name");
-
-                    } else {
-                        mat = Material.getMaterial(input);
-
-                        if (mat == null)
-                            mat = Material.matchMaterial(input);
+                    // If that fails, try case-insensitive match
+                    if (mat == null) {
+                        mat = Material.matchMaterial(input);
                     }
 
+                    // If that still fails, try legacy name matching
+                    if (mat == null) {
+                        mat = Material.matchMaterial(input, true);
+                    }
+
+                    // If all lookups fail, log a warning
+                    if (mat == null) {
+                        Util.warning("Could not find material matching '" + input + "'. Please check your configuration.");
+                    }
 
                     attribute = new EntityMaterialAttribute(mat);
-
                 }
             }
 

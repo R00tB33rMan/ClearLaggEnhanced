@@ -1,7 +1,6 @@
 package me.minebuilders.clearlag;
 
 import me.minebuilders.clearlag.adapters.LatestVersionAdapter;
-import me.minebuilders.clearlag.adapters.LegacyVersionAdapter;
 import me.minebuilders.clearlag.adapters.VersionAdapter;
 import me.minebuilders.clearlag.annotations.AutoWire;
 import me.minebuilders.clearlag.annotations.ConfigPath;
@@ -16,9 +15,6 @@ import me.minebuilders.clearlag.reflection.AutoWirer;
 import me.minebuilders.clearlag.tasks.*;
 import me.minebuilders.clearlag.triggeredremoval.TriggerManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Clearlag extends JavaPlugin {
 
@@ -130,22 +126,19 @@ public class Clearlag extends JavaPlugin {
     }
 
     private VersionAdapter findVersionAdapter() {
+        try {
+            // For Minecraft 1.8 - 1.21.5, we only need the LatestVersionAdapter
+            final VersionAdapter adapter = new LatestVersionAdapter();
 
-        final List<Class<? extends VersionAdapter>> versionAdapterTypes = new ArrayList<>();
-
-        versionAdapterTypes.add(LatestVersionAdapter.class);
-        versionAdapterTypes.add(LegacyVersionAdapter.class);
-
-        for (Class<? extends VersionAdapter> versionAdapterType : versionAdapterTypes) {
-
-            try {
-
-                final VersionAdapter tryingVersionAdapter = versionAdapterType.newInstance();
-
-                if (tryingVersionAdapter.isCompatible())
-                    return tryingVersionAdapter;
-
-            } catch (Throwable ignored) { }
+            if (adapter.isCompatible()) {
+                return adapter;
+            } else {
+                Util.warning("LatestVersionAdapter is not compatible with your server version. This is unexpected.");
+                Util.warning("Please report this issue to the plugin developer.");
+            }
+        } catch (Throwable e) {
+            Util.warning("Failed to initialize VersionAdapter: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return null;

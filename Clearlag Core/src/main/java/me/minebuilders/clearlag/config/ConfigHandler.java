@@ -12,10 +12,12 @@ import me.minebuilders.clearlag.modules.Module;
 import me.minebuilders.clearlag.reflection.ReflectionUtil;
 import me.minebuilders.clearlag.tasks.WarnTask;
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
@@ -179,13 +181,28 @@ public class ConfigHandler {
 
                     ConfigData cd = configValue.valueType().getConfigData();
 
-                    Object ob = cd.getValue(configValue.path().length() <= 1 ? path + "." + fieldToConfigValue(field) : configValue.path());
+                    String configPath;
+
+                    // First check if a ConfigKey is specified
+                    if (configValue.key() != ConfigKey.NONE) {
+                        configPath = configValue.key().getPath();
+                    } 
+                    // Then check if a legacy path is specified
+                    else if (!configValue.legacyPath().isEmpty()) {
+                        configPath = configValue.legacyPath();
+                    }
+                    // Finally fall back to the original path or generate one from the field name
+                    else {
+                        configPath = configValue.path().length() <= 1 ? path + "." + fieldToConfigValue(field) : configValue.path();
+                    }
+
+                    Object ob = cd.getValue(configPath);
 
                     if (ob == null) {
                         Object tp = field.get(object);
 
                         if (tp != null)
-                            ob = tp.getClass().newInstance();
+                            ob = tp.getClass().getDeclaredConstructor().newInstance();
                     }
 
                     field.set(object, (cd instanceof PrimitiveCV ? ReflectionUtil.castPrimitedValues(field.getType(), ob) : ob));
@@ -223,6 +240,98 @@ public class ConfigHandler {
     public void reloadConfig() {
         Clearlag.getInstance().reloadConfig();
         config = Clearlag.getInstance().getConfig();
+    }
+
+    /**
+     * Get a configuration value using a ConfigKey enum
+     * @param path The ConfigKey enum value
+     * @param <T> The expected return type
+     * @return The configuration value
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T get(ConfigKey path) {
+        return (T) config.get(path.getPath());
+    }
+
+    /**
+     * Get a boolean configuration value using a ConfigKey enum
+     * @param path The ConfigKey enum value
+     * @return The boolean value
+     */
+    public boolean getBoolean(ConfigKey path) {
+        return config.getBoolean(path.getPath());
+    }
+
+    /**
+     * Get an integer configuration value using a ConfigKey enum
+     * @param path The ConfigKey enum value
+     * @return The integer value
+     */
+    public int getInt(ConfigKey path) {
+        return config.getInt(path.getPath());
+    }
+
+    /**
+     * Get a string configuration value using a ConfigKey enum
+     * @param path The ConfigKey enum value
+     * @return The string value
+     */
+    public String getString(ConfigKey path) {
+        return config.getString(path.getPath());
+    }
+
+    /**
+     * Get a double configuration value using a ConfigKey enum
+     * @param path The ConfigKey enum value
+     * @return The double value
+     */
+    public double getDouble(ConfigKey path) {
+        return config.getDouble(path.getPath());
+    }
+
+    /**
+     * Get a long configuration value using a ConfigKey enum
+     * @param path The ConfigKey enum value
+     * @return The long value
+     */
+    public long getLong(ConfigKey path) {
+        return config.getLong(path.getPath());
+    }
+
+    /**
+     * Get a list configuration value using a ConfigKey enum
+     * @param path The ConfigKey enum value
+     * @return The list value
+     */
+    public List<?> getList(ConfigKey path) {
+        return config.getList(path.getPath());
+    }
+
+    /**
+     * Get a string list configuration value using a ConfigKey enum
+     * @param path The ConfigKey enum value
+     * @return The string list value
+     */
+    public List<String> getStringList(ConfigKey path) {
+        return config.getStringList(path.getPath());
+    }
+
+    /**
+     * Get a configuration section using a ConfigKey enum
+     * @param path The ConfigKey enum value
+     * @return The configuration section
+     */
+    public ConfigurationSection getConfigurationSection(ConfigKey path) {
+        return config.getConfigurationSection(path.getPath());
+    }
+
+    /**
+     * Check if a configuration path exists using a ConfigKey enum
+     * @param path The ConfigKey enum value
+     * @return True if the path exists
+     */
+    public boolean isSet(ConfigKey path) {
+        return config.isSet(path.getPath());
     }
 
     private void renameCurrentConfig(String newName) {

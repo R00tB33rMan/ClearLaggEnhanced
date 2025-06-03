@@ -1,8 +1,8 @@
 name: ClearLag
 author: bob7l
-description: Clear your lagg!
+description: Clear your lagg! Modern and optimized for the latest Minecraft versions.
 main: me.minebuilders.clearlag.Clearlag
-version: 3.2.2
+version: ${project.version}
 api-version: 1.13
 commands:
   lagg:
