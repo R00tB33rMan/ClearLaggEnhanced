@@ -6,7 +6,7 @@
 
     <groupId>me.minebuilders</groupId>
     <artifactId>clearlag</artifactId>
-    <version>4.1.0</version>
+    <version>5.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -43,7 +43,7 @@
     </dependencies>
 
     <build>
-        <finalName>ClearLag</finalName>
+        <finalName>ClearLag-V2</finalName>
         <sourceDirectory>${basedir}/Clearlag Core/src/main/java</sourceDirectory>
         <defaultGoal>clean install</defaultGoal>
 
@@ -88,7 +88,7 @@
                 <version>3.5.0</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <finalName>ClearLag</finalName>
+                    <finalName>ClearLag-V2</finalName>
                     <shadedArtifactAttached>false</shadedArtifactAttached>
                 </configuration>
                 <executions>
