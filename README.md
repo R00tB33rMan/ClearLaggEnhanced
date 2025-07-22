@@ -1,5 +1,5 @@
 
-# ClearLag - Modern Lag Reduction Plugin
+# ClearLaggEnhanced  - Modern Lag Reduction Plugin
 
 ClearLag is a powerful and efficient lag reduction plugin for Minecraft servers, now updated to support versions 1.8 through 1.21.5. This plugin helps server administrators manage and reduce lag by providing various tools and automated features to clear entities, manage chunks, and monitor server performance.
 
