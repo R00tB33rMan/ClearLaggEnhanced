@@ -1,63 +1,143 @@
+# ClearLaggEnhanced
 
-# ClearLaggEnhanced  - Modern Lag Reduction Plugin
+The ultimate performance management plugin for Minecraft servers (1.8 - 1.21+). A complete rewrite of the classic ClearLag plugin with modern features and intelligent optimization.
 
-ClearLag is a powerful and efficient lag reduction plugin for Minecraft servers, now updated to support versions 1.8 through 1.21.5. This plugin helps server administrators manage and reduce lag by providing various tools and automated features to clear entities, manage chunks, and monitor server performance.
+## 🚀 Features
 
-## Features
+### Core Philosophy
+- **Legacy Honored, Technology Advanced**: Every feature from the original ClearLag, but rebuilt for modern servers
+- **Asynchronous & Thread-Safe**: All heavy operations run off the main thread
+- **Intelligence over Brute Force**: Smart decisions based on real-time data
+- **Ultimate Compatibility**: Built for Paper API with graceful Spigot fallback
 
-- **Entity Management**: Automatically clear entities at configurable intervals
-- **Chunk Management**: Unload unused chunks to free up memory
-- **TPS Monitoring**: Monitor server TPS (Ticks Per Second) to identify lag issues
-- **Memory Management**: Monitor and manage server memory usage
-- **Performance Tools**: Various commands to help diagnose and fix performance issues
-- **Customizable**: Extensive configuration options to tailor the plugin to your server's needs
+### Key Modules
 
-## Commands
+#### 🎯 Intelligent Entity Management
+- **Density-Based Culling**: Removes entities from lag hotspots, not globally
+- **AI Pathfinding Throttling**: Reduces mob CPU usage without killing them
+- **Safe Entity Protection**: Never touches important entities (players, villagers, item frames)
+
+#### 🗺️ Proactive Chunk Management
+- **Automatic Chunk GC**: Background unloading of inactive chunks
+- **Spawn Protection**: Keeps important areas loaded
+- **Smart Detection**: Unloads chunks only when truly safe
+
+#### ⚡ Redstone Optimization
+- **Clock Detection**: Identifies and throttles redstone clocks
+- **Update Limiting**: Prevents redstone lag spikes
+- **Non-Breaking**: Slows updates instead of breaking circuits
+
+#### 📦 Advanced Hopper Optimization
+- **Transfer Throttling**: Prevents hopper overload
+- **Chunk Loading Prevention**: Stops hoppers from loading chunks unnecessarily
+- **Item Grouping**: Optimizes bulk transfers
+
+#### 🧠 Heuristics Engine
+- **The Brain**: Automatically adjusts all optimizations based on live TPS
+- **Dynamic Response**: Increases aggressiveness when TPS drops
+- **Smart Recovery**: Reduces optimizations when performance improves
+
+#### 📊 Comprehensive Diagnostics
+- **Real-time Monitoring**: TPS, MSPT, memory usage
+- **Performance Profiling**: Deep server analysis
+- **Health Checks**: Automated server status reports
+
+## 📋 Commands
 
 | Command | Description | Permission |
 |---------|-------------|------------|
-| `/lagg clear` | Clear entities | lagg.clear |
-| `/lagg reload` | Reload configuration | lagg.reload |
-| `/lagg check` | Check entity counts | lagg.check |
-| `/lagg killmobs` | Kill all mobs | lagg.killmobs |
-| `/lagg unloadchunks` | Unload unused chunks | lagg.unloadchunks |
-| `/lagg gc` | Run garbage collection | lagg.gc |
-| `/lagg tps` | Check server TPS | lagg.tps |
-| `/lagg memory` | Check memory usage | lagg.memory |
-| `/lagg performance` | Run performance diagnostics | lagg.performance |
+| `/cle` | Main command and help | `clearlaggenhanced.admin` |
+| `/cle tps` | Show TPS and MSPT | `clearlaggenhanced.tps` |
+| `/cle memory` | Memory usage information | `clearlaggenhanced.memory` |
+| `/cle check` | Comprehensive health check | `clearlaggenhanced.check` |
+| `/cle clear` | Emergency entity clearing | `clearlaggenhanced.clear` |
+| `/cle modules` | List all modules | `clearlaggenhanced.admin` |
+| `/cle reload` | Reload configuration | `clearlaggenhanced.reload` |
 
-## Permissions
+## 🔧 Installation
 
-| Permission | Description |
-|------------|-------------|
-| `lagg.clear` | Permission to clear lag |
-| `lagg.reload` | Permission to reload config from disk |
-| `lagg.check` | Permission to check entity counts |
-| `lagg.killmobs` | Permission to kill mobs |
-| `lagg.unloadchunks` | Permission to unload chunks |
-| `lagg.help` | Permission to see commands |
-| `lagg.gc` | Permission to run garbage collection |
-| `lagg.tps` | Permission to see TPS |
-| `lagg.memory` | Permission to check memory usage |
-| `lagg.performance` | Permission to run performance diagnostics |
+1. Download the latest release from [Releases](https://github.com/PureGero/ClearLaggEnhanced/releases)
+2. Place the JAR file in your `plugins/` folder
+3. Restart your server
+4. Configure modules in `plugins/ClearLaggEnhanced/modules/`
 
-## Configuration
+## ⚙️ Configuration
 
-The plugin is highly configurable. Check the `config.yml` file for all available options.
+The plugin uses a modular configuration system:
 
-## Support
+- `config.yml` - Main plugin settings
+- `modules/entity-manager.yml` - Entity management settings
+- `modules/chunk-manager.yml` - Chunk optimization settings
+- `modules/heuristics-engine.yml` - Auto-optimization brain settings
+- And more...
 
-If you encounter any issues or have questions, please join [BusyBee Development](https://discord.gg/mSG9uPefuP) and go to the ClearLaggEnhanced (cle-chat) for support!
+## 🎮 Legacy Compatibility
 
-## License
+All original ClearLag commands work with enhanced functionality:
 
-This project is licensed under the terms of the included LICENSE file.
+- `/lagg clear` → `/cle clear` (intelligent clearing)
+- `/lagg killmobs` → `/cle killmobs` (with advanced filtering)
+- `/lagg tps` → `/cle tps` (enhanced display)
+- `/lagg memory` → `/cle memory` (detailed analysis)
+- `/lagg check` → `/cle check` (comprehensive diagnostics)
 
-## History
+## 🔄 Migration from ClearLag
 
-Clearlag has been around since 2011 and has evolved over the years to keep up with Minecraft's changes. The plugin was originally designed for older versions of Minecraft but has been continuously updated to support the latest versions.
+1. Stop your server
+2. Remove the old ClearLag plugin
+3. Install ClearLaggEnhanced
+4. Start your server - configuration will be automatically created
+5. No manual migration needed!
 
-**Previous Modules (Historical)**
-- [Original ClearLagg](https://www.spigotmc.org/resources/clearlagg.68271/)
-- Clearlag Legacy: For Spigot/Bukkit builds before 1.8 (removed in v4.0.0)
-- Clearlag Core: For 1.8+ (current module)
+## 📈 Performance
+
+ClearLaggEnhanced is designed to be the solution, not part of the problem:
+
+- **Async Operations**: Heavy work happens off the main thread
+- **Smart Scheduling**: Operations spread across multiple ticks
+- **Minimal Overhead**: Only acts when necessary
+- **Thread-Safe**: Built for modern multi-threaded servers
+
+## 🛠️ Development
+
+### Building
+```bash
+git clone https://github.com/PureGero/ClearLaggEnhanced.git
+cd ClearLaggEnhanced
+mvn -DskipTests package
+```
+
+### Requirements
+
+- Java 17+
+- Paper API 1.21+
+- Maven 3.9+
+
+## 📊 Metrics
+
+This plugin uses bStats to collect anonymous usage statistics. This helps us understand how the plugin is used and improve it. You can opt out in the configuration.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting PRs.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Original ClearLag developers for the inspiration
+- Paper team for the excellent server software
+- Aikar for the command framework (ACF)
+- SpongePowered for the Configurate library
+
+## 📞 Support
+
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/PureGero/ClearLaggEnhanced/issues)
+- 💬 **Discord**: [Join our server](https://discord.gg/your-discord)
+- 📖 **Wiki**: [Documentation](https://github.com/PureGero/ClearLaggEnhanced/wiki)
+
+---
+
+**ClearLaggEnhanced** - Because your server deserves better than lag.
