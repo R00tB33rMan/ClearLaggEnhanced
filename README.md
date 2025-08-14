@@ -1,6 +1,6 @@
 # ClearLaggEnhanced
 
-The ultimate performance management plugin for Minecraft servers (1.8 - 1.21+). A complete rewrite of the classic ClearLag plugin with modern features and intelligent optimization.
+The ultimate performance management plugin for Minecraft servers (1.21+). A complete rewrite of the classic ClearLag plugin with modern features and intelligent optimization.
 
 ## 🚀 Features
 
@@ -56,7 +56,7 @@ The ultimate performance management plugin for Minecraft servers (1.8 - 1.21+). 
 
 ## 🔧 Installation
 
-1. Download the latest release from [Releases](https://github.com/PureGero/ClearLaggEnhanced/releases)
+1. Download the latest release from [Releases](https://github.com/BusyBee-Development/ClearLaggEnhanced/releases)
 2. Place the JAR file in your `plugins/` folder
 3. Restart your server
 4. Configure modules in `plugins/ClearLaggEnhanced/modules/`
@@ -98,45 +98,12 @@ ClearLaggEnhanced is designed to be the solution, not part of the problem:
 - **Minimal Overhead**: Only acts when necessary
 - **Thread-Safe**: Built for modern multi-threaded servers
 
-## 🛠️ Development
-
-### Building
-```bash
-git clone https://github.com/PureGero/ClearLaggEnhanced.git
-cd ClearLaggEnhanced
-mvn -DskipTests package
-```
-
-### Requirements
-
-- Java 17+
-- Paper API 1.21+
-- Maven 3.9+
-
-## 📊 Metrics
-
-This plugin uses bStats to collect anonymous usage statistics. This helps us understand how the plugin is used and improve it. You can opt out in the configuration.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting PRs.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments
 
-- Original ClearLag developers for the inspiration
-- Paper team for the excellent server software
-- Aikar for the command framework (ACF)
-- SpongePowered for the Configurate library
+- Original ClearLag developers bob7l
 
 ## 📞 Support
-
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/PureGero/ClearLaggEnhanced/issues)
-- 💬 **Discord**: [Join our server](https://discord.gg/your-discord)
-- 📖 **Wiki**: [Documentation](https://github.com/PureGero/ClearLaggEnhanced/wiki)
+- 💬 **Discord**: [Join our server](https://discord.gg/mSG9uPefuP)
 
 ---
 

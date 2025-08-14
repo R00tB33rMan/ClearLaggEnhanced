@@ -29,6 +29,10 @@
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
     </repository>
+    <repository>
+      <id>codemc-creatorfromhell</id>
+      <url>https://repo.codemc.io/repository/creatorfromhell/</url>
+    </repository>
   </repositories>
 
   <dependencies>
@@ -41,9 +45,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.github.MilkBowl</groupId>
-      <artifactId>VaultAPI</artifactId>
-      <version>1.7.1</version>
+      <groupId>net.milkbowl.vault</groupId>
+      <artifactId>VaultUnlockedAPI</artifactId>
+      <version>2.15</version>
       <scope>provided</scope>
     </dependency>
 
@@ -75,11 +79,6 @@
       <artifactId>acf-paper</artifactId>
       <version>0.5.2</version>
     </dependency>
-    <dependency>
-      <groupId>org.bstats</groupId>
-      <artifactId>bstats-bukkit</artifactId>
-      <version>3.0.2</version>
-    </dependency>
   </dependencies>
 
   <build>
@@ -101,8 +100,8 @@
       </resource>
     </resources>
 
-    <!-- Produce ClearLaggEnhanced.jar (without version/classifier) -->
-    <finalName>ClearLaggEnhanced</finalName>
+    <!-- Produce versioned jar: ClearLaggEnhanced-${project.version}.jar -->
+    <finalName>ClearLaggEnhanced-${project.version}</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -139,10 +138,6 @@
                 <relocation>
                   <pattern>co.aikar.commands</pattern>
                   <shadedPattern>org.busybee.clearlaggenhanced.libs.acf</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>org.bstats</pattern>
-                  <shadedPattern>org.busybee.clearlaggenhanced.libs.bstats</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>

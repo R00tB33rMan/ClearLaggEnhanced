@@ -7,9 +7,6 @@ import org.busybee.clearlaggenhanced.scheduler.AsyncTaskManager;
 import org.busybee.clearlaggenhanced.utils.Logger;
 import org.busybee.clearlaggenhanced.utils.ServerVersion;
 import org.busybee.clearlaggenhanced.utils.LanguageManager;
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SingleLineChart;
-import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -34,9 +31,6 @@ public final class ClearLaggEnhanced extends JavaPlugin {
     private CommandManager commandManager;
     private LanguageManager languageManager;
     
-    // Metrics
-    private Metrics metrics;
-    
     @Override
     public void onEnable() {
         instance = this;
@@ -58,8 +52,6 @@ public final class ClearLaggEnhanced extends JavaPlugin {
             // Phase 4: Register commands
             registerCommands();
             
-            // Phase 5: Start metrics
-            initializeMetrics();
             
             Logger.info("ClearLaggEnhanced has been successfully enabled!");
             Logger.info("Use '/cle menu' to access the control panel");
@@ -137,24 +129,6 @@ public final class ClearLaggEnhanced extends JavaPlugin {
         Logger.info("Registering commands...");
         commandManager = new CommandManager(this);
         commandManager.registerAll();
-    }
-    
-    private void initializeMetrics() {
-        if (configManager.getMainConfig().getMetrics().isEnabled()) {
-            Logger.info("Initializing metrics...");
-            metrics = new Metrics(this, 21847); // bStats plugin ID
-            
-            // Add custom charts for performance data
-            addMetricsCharts();
-        }
-    }
-    
-    private void addMetricsCharts() {
-        // Server performance metrics
-        metrics.addCustomChart(new SingleLineChart("average_tps", () -> (int) Math.round(getServer().getTPS()[0])));
-        
-        // Module usage metrics
-        metrics.addCustomChart(new SimplePie("enabled_modules", () -> String.valueOf(moduleManager.getEnabledModuleCount())));
     }
     
     // Getters for core components

@@ -124,13 +124,13 @@ public class ModuleConfig {
     public void saveToNode(ConfigurationNode node) {
         node.node("enabled").raw(enabled);
         node.node("priority").raw(priority);
-        
+
         ConfigurationNode settingsNode = node.node("settings");
-        
+
         for (Map.Entry<String, Object> entry : settings.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            
+
             if (key.contains(".")) {
                 // Nested setting
                 String[] parts = key.split("\\.");
@@ -138,10 +138,31 @@ public class ModuleConfig {
                 for (int i = 0; i < parts.length - 1; i++) {
                     current = current.node(parts[i]);
                 }
-                current.node(parts[parts.length - 1]).raw(value);
+                ConfigurationNode target = current.node(parts[parts.length - 1]);
+                if (value instanceof String[]) {
+                    java.util.List<String> list = java.util.Arrays.asList((String[]) value);
+                    try {
+                        target.setList(String.class, list);
+                    } catch (org.spongepowered.configurate.serialize.SerializationException e) {
+                        // Fallback to raw list if setList fails
+                        target.raw(list);
+                    }
+                } else {
+                    target.raw(value);
+                }
             } else {
                 // Simple setting
-                settingsNode.node(key).raw(value);
+                ConfigurationNode target = settingsNode.node(key);
+                if (value instanceof String[]) {
+                    java.util.List<String> list = java.util.Arrays.asList((String[]) value);
+                    try {
+                        target.setList(String.class, list);
+                    } catch (org.spongepowered.configurate.serialize.SerializationException e) {
+                        target.raw(list);
+                    }
+                } else {
+                    target.raw(value);
+                }
             }
         }
     }
