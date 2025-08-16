@@ -1,5 +1,6 @@
 C:\Users\troym\OneDrive\Desktop\ClearLaggEnhanced\src\main\java\org\busybee\clearlaggenhanced\ClearLaggEnhanced.java
-C:\Users\troym\OneDrive\Desktop\ClearLaggEnhanced\src\main\java\org\busybee\clearlaggenhanced\commands\CommandManager.java
+C:\Users\troym\OneDrive\Desktop\ClearLaggEnhanced\src\main\java\org\busybee\clearlaggenhanced\commands\ClearLaggCommand.java
+C:\Users\troym\OneDrive\Desktop\ClearLaggEnhanced\src\main\java\org\busybee\clearlaggenhanced\commands\ClearLaggTabCompleter.java
 C:\Users\troym\OneDrive\Desktop\ClearLaggEnhanced\src\main\java\org\busybee\clearlaggenhanced\commands\impl\ConfigCommands.java
 C:\Users\troym\OneDrive\Desktop\ClearLaggEnhanced\src\main\java\org\busybee\clearlaggenhanced\commands\impl\DiagnosticCommands.java
 C:\Users\troym\OneDrive\Desktop\ClearLaggEnhanced\src\main\java\org\busybee\clearlaggenhanced\commands\impl\MainCommands.java

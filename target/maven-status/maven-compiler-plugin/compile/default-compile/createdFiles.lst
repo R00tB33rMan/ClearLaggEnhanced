@@ -5,9 +5,10 @@ org\busybee\clearlaggenhanced\config\configs\MainConfig$GeneralSettings.class
 org\busybee\clearlaggenhanced\modules\impl\HeuristicsEngineModule.class
 org\busybee\clearlaggenhanced\config\configs\ModuleConfig.class
 org\busybee\clearlaggenhanced\ClearLaggEnhanced.class
+org\busybee\clearlaggenhanced\commands\ClearLaggCommand.class
+org\busybee\clearlaggenhanced\commands\ClearLaggTabCompleter.class
 org\busybee\clearlaggenhanced\config\configs\MainConfig$PerformanceSettings.class
 org\busybee\clearlaggenhanced\config\configs\MainConfig.class
-org\busybee\clearlaggenhanced\commands\CommandManager.class
 org\busybee\clearlaggenhanced\utils\ServerVersion.class
 org\busybee\clearlaggenhanced\modules\impl\ChunkManagerModule.class
 org\busybee\clearlaggenhanced\commands\impl\DiagnosticCommands.class
