@@ -82,3 +82,10 @@ permissions:
   clearlaggenhanced.menu:
     description: Access the GUI control panel
     default: op
+  
+  clearlaggenhanced.help:
+    description: Access to /cle help and /cle version
+    default: true
+  clearlaggenhanced.version:
+    description: View plugin version
+    default: true
