@@ -1,7 +1,0 @@
-ui:
-  modules:
-    header: "=== Performance Modules ==="
-module:
-  not_found: "Module not found: {module}"
-  enabled: "Module enabled: {module}"
-  disabled: "Module disabled: {module}"
