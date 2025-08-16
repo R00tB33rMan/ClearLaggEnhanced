@@ -1,16 +1,10 @@
 package org.busybee.clearlaggenhanced.commands.impl;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
 import org.busybee.clearlaggenhanced.ClearLaggEnhanced;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-/**
- * Diagnostic and monitoring commands
- */
-@CommandAlias("clearlagg|cle")
-public class DiagnosticCommands extends BaseCommand {
+public class DiagnosticCommands {
     
     private final ClearLaggEnhanced plugin;
     
@@ -18,9 +12,6 @@ public class DiagnosticCommands extends BaseCommand {
         this.plugin = plugin;
     }
     
-    @Subcommand("tps")
-    @Description("Show server TPS and MSPT")
-    @CommandPermission("clearlaggenhanced.tps")
     public void onTps(CommandSender sender) {
         double[] tps = plugin.getServer().getTPS();
         
@@ -28,15 +19,11 @@ public class DiagnosticCommands extends BaseCommand {
         sender.sendMessage(ChatColor.YELLOW + "TPS (1m): " + formatTps(tps[0]));
         sender.sendMessage(ChatColor.YELLOW + "TPS (5m): " + formatTps(tps[1]));
         sender.sendMessage(ChatColor.YELLOW + "TPS (15m): " + formatTps(tps[2]));
-        
-        // MSPT calculation (approximation)
+
         double mspt = 1000.0 / tps[0];
         sender.sendMessage(ChatColor.YELLOW + "MSPT: " + formatMspt(mspt));
     }
     
-    @Subcommand("memory")
-    @Description("Show memory usage information")
-    @CommandPermission("clearlaggenhanced.memory")
     public void onMemory(CommandSender sender) {
         Runtime runtime = Runtime.getRuntime();
         long maxMemory = runtime.maxMemory();
@@ -50,13 +37,9 @@ public class DiagnosticCommands extends BaseCommand {
         sender.sendMessage(ChatColor.YELLOW + "Usage: " + String.format("%.1f%%", (double) usedMemory / maxMemory * 100));
     }
     
-    @Subcommand("check")
-    @Description("Comprehensive server health check")
-    @CommandPermission("clearlaggenhanced.check")
     public void onCheck(CommandSender sender) {
         sender.sendMessage(ChatColor.GREEN + "=== Server Health Check ===");
-        
-        // TPS check
+
         double tps = plugin.getServer().getTPS()[0];
         if (tps >= 19.5) {
             sender.sendMessage(ChatColor.GREEN + "✓ TPS: Excellent (" + String.format("%.2f", tps) + ")");
@@ -65,8 +48,7 @@ public class DiagnosticCommands extends BaseCommand {
         } else {
             sender.sendMessage(ChatColor.RED + "✗ TPS: Poor (" + String.format("%.2f", tps) + ")");
         }
-        
-        // Memory check
+
         Runtime runtime = Runtime.getRuntime();
         double memoryUsage = (double) (runtime.totalMemory() - runtime.freeMemory()) / runtime.maxMemory() * 100;
         if (memoryUsage < 70) {
@@ -76,8 +58,7 @@ public class DiagnosticCommands extends BaseCommand {
         } else {
             sender.sendMessage(ChatColor.RED + "✗ Memory: Critical (" + String.format("%.1f%%", memoryUsage) + ")");
         }
-        
-        // Module status
+
         int enabledModules = plugin.getModuleManager().getEnabledModuleCount();
         sender.sendMessage(ChatColor.YELLOW + "Active Modules: " + enabledModules);
     }

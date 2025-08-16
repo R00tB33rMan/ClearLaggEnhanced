@@ -2,9 +2,6 @@ package org.busybee.clearlaggenhanced.utils;
 
 import org.bukkit.Bukkit;
 
-/**
- * Server version detection utility
- */
 public class ServerVersion {
     
     private static final String version = Bukkit.getServer().getClass().getPackage().getName();
@@ -13,7 +10,6 @@ public class ServerVersion {
     public static String getVersion() {
         return bukkitVersion;
     }
-    
     public static String getNMSVersion() {
         return version.substring(version.lastIndexOf('.') + 1);
     }

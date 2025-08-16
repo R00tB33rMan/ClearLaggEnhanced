@@ -6,9 +6,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Configuration for individual modules
- */
 public class ModuleConfig {
     
     private final String moduleName;
@@ -80,7 +77,6 @@ public class ModuleConfig {
             Object defaultValue = settings.get(key);
             
             if (key.contains(".")) {
-                // Nested setting
                 String[] parts = key.split("\\.");
                 ConfigurationNode current = settingsNode;
                 for (int i = 0; i < parts.length - 1; i++) {
@@ -102,7 +98,6 @@ public class ModuleConfig {
                     }
                 }
             } else {
-                // Simple setting
                 if (defaultValue instanceof Boolean) {
                     settings.put(key, settingsNode.node(key).getBoolean((Boolean) defaultValue));
                 } else if (defaultValue instanceof Integer) {
@@ -132,7 +127,6 @@ public class ModuleConfig {
             Object value = entry.getValue();
 
             if (key.contains(".")) {
-                // Nested setting
                 String[] parts = key.split("\\.");
                 ConfigurationNode current = settingsNode;
                 for (int i = 0; i < parts.length - 1; i++) {
@@ -151,7 +145,6 @@ public class ModuleConfig {
                     target.raw(value);
                 }
             } else {
-                // Simple setting
                 ConfigurationNode target = settingsNode.node(key);
                 if (value instanceof String[]) {
                     java.util.List<String> list = java.util.Arrays.asList((String[]) value);
@@ -166,8 +159,7 @@ public class ModuleConfig {
             }
         }
     }
-    
-    // Getters
+
     public String getModuleName() { return moduleName; }
     public boolean isEnabled() { return enabled; }
     public int getPriority() { return priority; }

@@ -7,9 +7,6 @@ import org.busybee.clearlaggenhanced.utils.Logger;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Comprehensive diagnostics and monitoring system
- */
 public class DiagnosticsModule extends PerformanceModule {
     
     private final ModuleConfig config;
@@ -23,10 +20,7 @@ public class DiagnosticsModule extends PerformanceModule {
     @Override
     public void initialize() {
         Logger.info("Initializing Diagnostics Module...");
-        
-        // Initialize performance monitoring
-        // This would set up various monitoring systems
-        
+
         Logger.info("Diagnostics Module initialized");
     }
     

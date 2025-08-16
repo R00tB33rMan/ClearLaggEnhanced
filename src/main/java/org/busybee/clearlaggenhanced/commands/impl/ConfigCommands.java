@@ -1,13 +1,10 @@
 package org.busybee.clearlaggenhanced.commands.impl;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
 import org.busybee.clearlaggenhanced.ClearLaggEnhanced;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-@CommandAlias("clearlagg|cle")
-public class ConfigCommands extends BaseCommand {
+public class ConfigCommands {
     
     private final ClearLaggEnhanced plugin;
     
@@ -15,9 +12,6 @@ public class ConfigCommands extends BaseCommand {
         this.plugin = plugin;
     }
     
-    @Subcommand("config")
-    @Description("Show configuration information")
-    @CommandPermission("clearlaggenhanced.config")
     public void onConfig(CommandSender sender) {
         sender.sendMessage(ChatColor.GREEN + "=== Configuration Status ===");
         sender.sendMessage(ChatColor.YELLOW + "Main config loaded: " + 

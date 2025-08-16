@@ -2,9 +2,6 @@ package org.busybee.clearlaggenhanced.config.configs;
 
 import org.spongepowered.configurate.ConfigurationNode;
 
-/**
- * Main plugin configuration
- */
 public class MainConfig {
     
     private GeneralSettings general = new GeneralSettings();
@@ -22,8 +19,7 @@ public class MainConfig {
         metrics.saveToNode(node.node("metrics"));
         performance.saveToNode(node.node("performance"));
     }
-    
-    // Getters
+
     public GeneralSettings getGeneral() { return general; }
     public MetricsSettings getMetrics() { return metrics; }
     public PerformanceSettings getPerformance() { return performance; }

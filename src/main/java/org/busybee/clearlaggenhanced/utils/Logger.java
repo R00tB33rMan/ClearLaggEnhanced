@@ -4,21 +4,15 @@ import org.busybee.clearlaggenhanced.ClearLaggEnhanced;
 
 import java.util.logging.Level;
 
-/**
- * Centralized logging utility
- */
 public class Logger {
     
     private static final String PREFIX = "[ClearLaggEnhanced] ";
-    
     public static void info(String message) {
         log(Level.INFO, message);
     }
-    
     public static void warning(String message) {
         log(Level.WARNING, message);
     }
-    
     public static void severe(String message) {
         log(Level.SEVERE, message);
     }
@@ -43,7 +37,6 @@ public class Logger {
         if (ClearLaggEnhanced.getInstance() != null) {
             ClearLaggEnhanced.getInstance().getLogger().log(level, message);
         } else {
-            // Fallback for early initialization
             System.out.println(PREFIX + level.getName() + ": " + message);
         }
     }

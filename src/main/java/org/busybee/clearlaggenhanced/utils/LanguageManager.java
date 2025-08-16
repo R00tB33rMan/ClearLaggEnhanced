@@ -12,10 +12,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Simple language manager that loads messages_{lang}.yml from the plugin data folder,
- * copying a default from the JAR resources if missing. Fallback to English.
- */
 public class LanguageManager {
 
     private final ClearLaggEnhanced plugin;
@@ -30,7 +26,6 @@ public class LanguageManager {
         if (lang == null || lang.isBlank()) {
             lang = "en";
         }
-        // Try to load the requested language first, then fallback to English
         loadLanguageFile("messages_" + lang + ".yml");
         if (messages.isEmpty() && !"en".equalsIgnoreCase(lang)) {
             loadLanguageFile("messages_en.yml");
@@ -41,7 +36,6 @@ public class LanguageManager {
         try {
             Path dataPath = plugin.getDataFolder().toPath().resolve(fileName);
             if (!Files.exists(dataPath)) {
-                // Copy from resources if available
                 try (InputStream in = plugin.getResource("messages/" + fileName)) {
                     if (in != null) {
                         Files.createDirectories(dataPath.getParent());
@@ -56,7 +50,6 @@ public class LanguageManager {
                         .nodeStyle(NodeStyle.BLOCK)
                         .build();
                 ConfigurationNode root = loader.load();
-                // Flatten one-level keys into messages map
                 for (Map.Entry<Object, ? extends ConfigurationNode> entry : root.childrenMap().entrySet()) {
                     String parent = String.valueOf(entry.getKey());
                     ConfigurationNode section = entry.getValue();

@@ -7,9 +7,6 @@ import org.busybee.clearlaggenhanced.utils.Logger;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Advanced hopper optimization system
- */
 public class HopperOptimizerModule extends PerformanceModule {
     
     private final ModuleConfig config;
@@ -23,9 +20,6 @@ public class HopperOptimizerModule extends PerformanceModule {
     @Override
     public void initialize() {
         Logger.info("Initializing Hopper Optimizer Module...");
-        
-        // Hopper optimization would require NMS or ProtocolLib integration
-        // This is a placeholder for the actual implementation
         
         Logger.info("Hopper Optimizer Module initialized");
     }

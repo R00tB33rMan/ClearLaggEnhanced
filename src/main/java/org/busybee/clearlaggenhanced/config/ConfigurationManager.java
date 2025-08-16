@@ -14,9 +14,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Manages all configuration files using the modern Configurate library
- */
 public class ConfigurationManager {
     
     private final ClearLaggEnhanced plugin;
@@ -32,17 +29,11 @@ public class ConfigurationManager {
     
     public void loadAll() {
         try {
-            // Create data folder if it doesn't exist
             if (!Files.exists(dataFolder)) {
                 Files.createDirectories(dataFolder);
             }
-            
-            // Load main configuration
             loadMainConfig();
-            
-            // Load module configurations
             loadModuleConfigs();
-            
             Logger.info("All configuration files loaded successfully");
             
         } catch (IOException e) {
@@ -61,14 +52,12 @@ public class ConfigurationManager {
         ConfigurationNode root;
         
         if (!Files.exists(configPath)) {
-            // Create default config
             root = loader.createNode();
             mainConfig = new MainConfig();
             mainConfig.saveToNode(root);
             loader.save(root);
             Logger.info("Created default main configuration");
         } else {
-            // Load existing config
             root = loader.load();
             mainConfig = new MainConfig();
             mainConfig.loadFromNode(root);
@@ -82,8 +71,7 @@ public class ConfigurationManager {
         if (!Files.exists(modulesPath)) {
             Files.createDirectories(modulesPath);
         }
-        
-        // Load each module config
+
         String[] modules = {
             "entity-manager",
             "chunk-manager", 
@@ -110,13 +98,11 @@ public class ConfigurationManager {
         ModuleConfig config = new ModuleConfig(moduleName);
         
         if (!Files.exists(configPath)) {
-            // Create default config
             root = loader.createNode();
             config.saveToNode(root);
             loader.save(root);
             Logger.info("Created default configuration for module: " + moduleName);
         } else {
-            // Load existing config
             root = loader.load();
             config.loadFromNode(root);
             Logger.info("Loaded configuration for module: " + moduleName);
@@ -138,11 +124,9 @@ public class ConfigurationManager {
     }
     
     public void shutdown() {
-        // Save any pending changes
         Logger.info("Configuration manager shutdown complete");
     }
-    
-    // Getters
+
     public MainConfig getMainConfig() {
         return mainConfig;
     }

@@ -1,16 +1,10 @@
 package org.busybee.clearlaggenhanced.commands.impl;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
 import org.busybee.clearlaggenhanced.ClearLaggEnhanced;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-/**
- * Main plugin commands (/clearlagg, /cle)
- */
-@CommandAlias("clearlagg|cle|clearlag|lagg")
-public class MainCommands extends BaseCommand {
+public class MainCommands {
     
     private final ClearLaggEnhanced plugin;
     
@@ -18,19 +12,21 @@ public class MainCommands extends BaseCommand {
         this.plugin = plugin;
     }
     
-    @Default
-    @Description("Show plugin information")
-    @CommandPermission("clearlaggenhanced.admin")
-    public void onDefault(CommandSender sender) {
+    public void onHelp(CommandSender sender) {
         sender.sendMessage(ChatColor.GREEN + "=== ClearLaggEnhanced v" + plugin.getDescription().getVersion() + " ===");
         sender.sendMessage(ChatColor.YELLOW + "The ultimate performance management plugin");
-        sender.sendMessage(ChatColor.GRAY + "Use " + ChatColor.WHITE + "/cle help" + ChatColor.GRAY + " for commands");
-        sender.sendMessage(ChatColor.GRAY + "Use " + ChatColor.WHITE + "/cle menu" + ChatColor.GRAY + " for the GUI");
+        sender.sendMessage(ChatColor.GRAY + "Commands:");
+        sender.sendMessage(ChatColor.WHITE + "/cle tps" + ChatColor.GRAY + " - Show server TPS and MSPT");
+        sender.sendMessage(ChatColor.WHITE + "/cle memory" + ChatColor.GRAY + " - Show memory usage");
+        sender.sendMessage(ChatColor.WHITE + "/cle check" + ChatColor.GRAY + " - Comprehensive health check");
+        sender.sendMessage(ChatColor.WHITE + "/cle modules" + ChatColor.GRAY + " - List modules and status");
+        sender.sendMessage(ChatColor.WHITE + "/cle module enable <name>" + ChatColor.GRAY + " - Enable a module");
+        sender.sendMessage(ChatColor.WHITE + "/cle module disable <name>" + ChatColor.GRAY + " - Disable a module");
+        sender.sendMessage(ChatColor.WHITE + "/cle clear" + ChatColor.GRAY + " - Clear entities intelligently");
+        sender.sendMessage(ChatColor.WHITE + "/cle reload" + ChatColor.GRAY + " - Reload configuration");
+        sender.sendMessage(ChatColor.WHITE + "/cle version" + ChatColor.GRAY + " - Show plugin version");
     }
-    
-    @Subcommand("reload")
-    @Description("Reload plugin configuration")
-    @CommandPermission("clearlaggenhanced.reload")
+
     public void onReload(CommandSender sender) {
         sender.sendMessage(ChatColor.YELLOW + "Reloading ClearLaggEnhanced configuration...");
         
@@ -43,21 +39,21 @@ public class MainCommands extends BaseCommand {
         }
     }
     
-    @Subcommand("clear")
-    @Description("Clear entities intelligently")
-    @CommandPermission("clearlaggenhanced.clear")
     public void onClear(CommandSender sender) {
         sender.sendMessage(ChatColor.YELLOW + "Starting intelligent entity clearing...");
-        
-        // This would trigger the entity manager's clearing logic
-        sender.sendMessage(ChatColor.GREEN + "Entity clearing completed!");
+
+        // The EntityManagerModule does not yet expose a public clear method.
+        // Preserve behavior by reporting availability based on module enablement.
+        if (plugin.getModuleManager().isModuleEnabled("entity-manager")) {
+            sender.sendMessage(ChatColor.RED + "Entity clearing is currently unavailable in this build.");
+        } else {
+            sender.sendMessage(ChatColor.RED + "Entity clearing is currently disabled.");
+        }
     }
     
-    @Subcommand("version")
-    @Description("Show plugin version and information")
     public void onVersion(CommandSender sender) {
         sender.sendMessage(ChatColor.GREEN + "ClearLaggEnhanced " + ChatColor.WHITE + "v" + plugin.getDescription().getVersion());
-        sender.sendMessage(ChatColor.GRAY + "Author: " + ChatColor.WHITE + "PureGero");
+        sender.sendMessage(ChatColor.GRAY + "Author: " + ChatColor.WHITE + "djtmk");
         sender.sendMessage(ChatColor.GRAY + "Website: " + ChatColor.WHITE + "https://github.com/PureGero/ClearLaggEnhanced");
     }
 }

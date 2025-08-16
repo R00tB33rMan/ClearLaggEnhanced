@@ -22,8 +22,7 @@ public class EntityManagerModule extends PerformanceModule {
     @Override
     public void initialize() {
         Logger.info("Initializing Entity Manager Module...");
-        // Logic to start scanning task will go here
-        // Example placeholder: operations.incrementAndGet();
+
     }
 
     @Override

@@ -22,8 +22,6 @@ public class HeuristicsEngineModule extends PerformanceModule {
     @Override
     public void initialize() {
         Logger.info("Initializing Heuristics Engine Module...");
-        // Logic to start monitoring task will go here
-        // Example placeholder: operations.incrementAndGet();
     }
 
     @Override

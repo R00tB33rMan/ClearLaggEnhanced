@@ -10,9 +10,6 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Intelligent redstone throttling system
- */
 public class RedstoneThrottlerModule extends PerformanceModule implements Listener {
     
     private final ModuleConfig config;
@@ -27,8 +24,7 @@ public class RedstoneThrottlerModule extends PerformanceModule implements Listen
     @Override
     public void initialize() {
         Logger.info("Initializing Redstone Throttler Module...");
-        
-        // Register event listeners
+
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         
         Logger.info("Redstone Throttler Module initialized");
@@ -37,19 +33,11 @@ public class RedstoneThrottlerModule extends PerformanceModule implements Listen
     @EventHandler
     public void onRedstoneEvent(BlockRedstoneEvent event) {
         redstoneEvents.incrementAndGet();
-        
-        // Basic throttling logic - can be expanded
         int maxUpdatesPerTick = config.getInt("max-updates-per-tick");
-        
-        // This is a simplified implementation
-        // In a full implementation, you would track updates per tick per chunk
         if (redstoneEvents.get() % 100 < maxUpdatesPerTick) {
-            // Allow the event
-            return;
         } else {
-            // Throttle the event
             throttledEvents.incrementAndGet();
-            event.setNewCurrent(event.getOldCurrent()); // Prevent change
+            event.setNewCurrent(event.getOldCurrent());
         }
     }
     

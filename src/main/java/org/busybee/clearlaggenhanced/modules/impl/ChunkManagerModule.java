@@ -24,12 +24,10 @@ public class ChunkManagerModule extends PerformanceModule {
         Logger.info("Initializing Chunk Manager Module...");
         if (config.getBoolean("auto-unload.enabled")) {
             long interval = config.getInt("auto-unload.check-interval") * 20L;
-            // scanTask = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, this::scanChunks, interval, interval);
         }
     }
 
     private void scanChunks() {
-        // Real scan logic will go here later
         operations.incrementAndGet();
     }
 

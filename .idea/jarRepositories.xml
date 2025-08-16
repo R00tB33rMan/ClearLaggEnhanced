@@ -17,9 +17,19 @@
       <option name="url" value="https://repo.codemc.io/repository/creatorfromhell/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="incendo-maven-public" />
+      <option name="name" value="incendo-maven-public" />
+      <option name="url" value="https://repo.incendo.org/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="papermc-repo" />
       <option name="name" value="papermc-repo" />
       <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="incendo-releases" />
+      <option name="name" value="incendo-releases" />
+      <option name="url" value="https://repo.incendo.org/content/repositories/releases/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -35,6 +45,11 @@
       <option name="id" value="dmulloy2-public" />
       <option name="name" value="dmulloy2-public" />
       <option name="url" value="https://repo.dmulloy2.net/repository/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="incendo-snapshots" />
+      <option name="name" value="incendo-snapshots" />
+      <option name="url" value="https://repo.incendo.org/content/repositories/snapshots/" />
     </remote-repository>
   </component>
 </project>
