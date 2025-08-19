@@ -1,110 +1,231 @@
 # ClearLaggEnhanced
 
-The ultimate performance management plugin for Minecraft servers (1.21+). A complete rewrite of the classic ClearLag plugin with modern features and intelligent optimization.
+A modern, customizable lag prevention plugin for Minecraft servers. This plugin is designed to help server owners maintain optimal performance by automatically clearing entities, limiting lag-causing mechanics, and providing detailed performance monitoring.
 
-## 🚀 Features
+## Special Thanks
 
-### Core Philosophy
-- **Legacy Honored, Technology Advanced**: Every feature from the original ClearLag, but rebuilt for modern servers
-- **Asynchronous & Thread-Safe**: All heavy operations run off the main thread
-- **Intelligence over Brute Force**: Smart decisions based on real-time data
-- **Ultimate Compatibility**: Built for Paper API with graceful Spigot fallback
+Special thanks to **bob7l**, the original developer of ClearLagg, whose work inspired this enhanced version. This plugin builds upon the foundation laid by the original ClearLagg plugin.
 
-### Key Modules
+## Features
 
-#### 🎯 Intelligent Entity Management
-- **Density-Based Culling**: Removes entities from lag hotspots, not globally
-- **AI Pathfinding Throttling**: Reduces mob CPU usage without killing them
-- **Safe Entity Protection**: Never touches important entities (players, villagers, item frames)
+- **Automatic Entity Clearing**: Remove dropped items, experience orbs, and other entities at configurable intervals
+- **Lag Prevention Modules**: Mob limiter, redstone limiter, hopper optimization, and spawner control
+- **Performance Monitoring**: Real-time TPS and memory usage tracking
+- **Smart Protection**: Protect named entities, tamed animals, and player-important items
+- **Customizable Notifications**: Warning system before entity clearing
+- **Admin GUI**: Easy-to-use graphical interface for server management
+- **PlaceholderAPI Support**: Use plugin data in other plugins
+- **Database Integration**: SQLite database for data persistence
 
-#### 🗺️ Proactive Chunk Management
-- **Automatic Chunk GC**: Background unloading of inactive chunks
-- **Spawn Protection**: Keeps important areas loaded
-- **Smart Detection**: Unloads chunks only when truly safe
+## Installation
 
-#### ⚡ Redstone Optimization
-- **Clock Detection**: Identifies and throttles redstone clocks
-- **Update Limiting**: Prevents redstone lag spikes
-- **Non-Breaking**: Slows updates instead of breaking circuits
-
-#### 📦 Advanced Hopper Optimization
-- **Transfer Throttling**: Prevents hopper overload
-- **Chunk Loading Prevention**: Stops hoppers from loading chunks unnecessarily
-- **Item Grouping**: Optimizes bulk transfers
-
-#### 🧠 Heuristics Engine
-- **The Brain**: Automatically adjusts all optimizations based on live TPS
-- **Dynamic Response**: Increases aggressiveness when TPS drops
-- **Smart Recovery**: Reduces optimizations when performance improves
-
-#### 📊 Comprehensive Diagnostics
-- **Real-time Monitoring**: TPS, MSPT, memory usage
-- **Performance Profiling**: Deep server analysis
-- **Health Checks**: Automated server status reports
-
-## 📋 Commands
-
-| Command | Description | Permission |
-|---------|-------------|------------|
-| `/cle` | Main command and help | `clearlaggenhanced.admin` |
-| `/cle tps` | Show TPS and MSPT | `clearlaggenhanced.tps` |
-| `/cle memory` | Memory usage information | `clearlaggenhanced.memory` |
-| `/cle check` | Comprehensive health check | `clearlaggenhanced.check` |
-| `/cle clear` | Emergency entity clearing | `clearlaggenhanced.clear` |
-| `/cle modules` | List all modules | `clearlaggenhanced.admin` |
-| `/cle reload` | Reload configuration | `clearlaggenhanced.reload` |
-
-## 🔧 Installation
-
-1. Download the latest release from [Releases](https://github.com/BusyBee-Development/ClearLaggEnhanced/releases)
-2. Place the JAR file in your `plugins/` folder
+1. Download the latest ClearLaggEnhanced.jar file
+2. Place it in your server's `plugins` folder
 3. Restart your server
-4. Configure modules in `plugins/ClearLaggEnhanced/modules/`
+4. Configure the plugin using the generated config files
 
-## ⚙️ Configuration
+## Commands
 
-The plugin uses a modular configuration system:
+All commands use the base command `/lagg` with the following aliases: `/clearlagg`, `/cl`, `/cle`
 
-- `config.yml` - Main plugin settings
-- `modules/entity-manager.yml` - Entity management settings
-- `modules/chunk-manager.yml` - Chunk optimization settings
-- `modules/heuristics-engine.yml` - Auto-optimization brain settings
-- And more...
+| Command | Description | Permission | Default |
+|---------|-------------|------------|---------|
+| `/lagg help` | Show help menu | `CLE.help` | All players |
+| `/lagg clear` | Manually clear entities now | `CLE.clear` | OP only |
+| `/lagg next` | Show time until next automatic clear | `CLE.next` | All players |
+| `/lagg tps` | Display current server TPS | `CLE.tps` | OP only |
+| `/lagg ram` | Show memory usage information | `CLE.ram` | OP only |
+| `/lagg admin` | Open the admin GUI (players only) | `CLE.admin` | OP only |
+| `/lagg reload` | Reload plugin configuration | `CLE.reload` | OP only |
 
-## 🎮 Legacy Compatibility
+## Permissions
 
-All original ClearLag commands work with enhanced functionality:
+| Permission | Description | Default |
+|------------|-------------|---------|
+| `CLE.*` | All ClearLaggEnhanced permissions | OP |
+| `CLE.help` | Access to help command | True |
+| `CLE.clear` | Access to manual clearing | OP |
+| `CLE.next` | Access to next clear timer | True |
+| `CLE.tps` | Access to TPS command | OP |
+| `CLE.ram` | Access to memory command | OP |
+| `CLE.admin` | Access to admin GUI | OP |
+| `CLE.reload` | Access to reload command | OP |
 
-- `/lagg clear` → `/cle clear` (intelligent clearing)
-- `/lagg killmobs` → `/cle killmobs` (with advanced filtering)
-- `/lagg tps` → `/cle tps` (enhanced display)
-- `/lagg memory` → `/cle memory` (detailed analysis)
-- `/lagg check` → `/cle check` (comprehensive diagnostics)
+## PlaceholderAPI Placeholders
 
-## 🔄 Migration from ClearLag
+If PlaceholderAPI is installed, you can use these placeholders in other plugins:
 
-1. Stop your server
-2. Remove the old ClearLag plugin
-3. Install ClearLaggEnhanced
-4. Start your server - configuration will be automatically created
-5. No manual migration needed!
+| Placeholder | Description | Example Output |
+|-------------|-------------|----------------|
+| `%clearlagenhanced_tps%` | Current server TPS | `19.85` |
+| `%clearlagenhanced_memory_used%` | Used memory in MB | `2048` |
+| `%clearlagenhanced_memory_max%` | Maximum memory in MB | `4096` |
+| `%clearlagenhanced_memory_percentage%` | Memory usage percentage | `50.0` |
+| `%clearlagenhanced_entities_total%` | Total entities on server | `1250` |
+| `%clearlagenhanced_next_clear%` | Seconds until next clear | `180` |
 
-## 📈 Performance
+## Configuration
 
-ClearLaggEnhanced is designed to be the solution, not part of the problem:
+### Main Configuration (`config.yml`)
 
-- **Async Operations**: Heavy work happens off the main thread
-- **Smart Scheduling**: Operations spread across multiple ticks
-- **Minimal Overhead**: Only acts when necessary
-- **Thread-Safe**: Built for modern multi-threaded servers
+#### Database Settings
+```yaml
+database:
+  enabled: true
+  type: "sqlite"
+  file: "data.db"
+```
 
-## 🙏 Acknowledgments
+#### Entity Clearing
+```yaml
+entity-clearing:
+  enabled: true
+  interval: 300 # seconds (5 minutes)
+  protect-named-entities: true
+  protect-tamed-entities: true
+  
+  # Entities that will never be cleared
+  whitelist:
+    - "PLAYER"
+    - "VILLAGER"
+    - "ARMOR_STAND"
+  
+  # Entities that will always be cleared first
+  blacklist:
+    - "DROPPED_ITEM"
+    - "EXPERIENCE_ORB"
+    - "ARROW"
+  
+  # Specific worlds to clear (empty = all worlds)
+  worlds: []
+```
 
-- Original ClearLag developers bob7l
+#### Lag Prevention Modules
+```yaml
+lag-prevention:
+  mob-limiter:
+    enabled: true
+    max-mobs-per-chunk: 50
+    exempt-named-mobs: true
+  
+  redstone-limiter:
+    enabled: true
+    max-redstone-per-chunk: 100
+    disable-fast-clocks: true
+    clock-detection-threshold: 10
+  
+  hopper-limiter:
+    enabled: true
+    transfer-cooldown: 8 # ticks
+    max-hoppers-per-chunk: 20
+  
+  spawner-limiter:
+    enabled: true
+    spawn-delay-multiplier: 1.5
+    max-spawners-per-chunk: 10
+```
 
-## 📞 Support
-- 💬 **Discord**: [Join our server](https://discord.gg/mSG9uPefuP)
+#### Performance Monitoring
+```yaml
+monitoring:
+  enabled: true
+  chunk-scan-radius: 5
+  entity-threshold: 100
+```
+
+#### Notifications
+```yaml
+notifications:
+  enabled: true
+  warning-times: [60, 30, 10, 5] # seconds before clearing
+  
+  methods:
+    chat: true
+    actionbar: true
+    title: false
+    sound: true
+  
+  sound:
+    type: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+```
+
+### Message Configuration (`messages.yml`)
+
+Customize all plugin messages, warnings, and notifications. Supports color codes and placeholders.
+
+```yaml
+warnings:
+  entity-clear: "<yellow>⚠ Entities will be cleared in <red>{seconds}</red> seconds!"
+
+notifications:
+  clear-complete: "<green>✓ Cleared <yellow>{count}</yellow> entities in <gray>{time}ms</gray>!"
+```
+
+## Entity Types
+
+### Protected by Default
+- Players
+- Villagers
+- Iron Golems
+- Named entities (when `protect-named-entities: true`)
+- Tamed animals (when `protect-tamed-entities: true`)
+- Armor Stands
+- Item Frames
+- Paintings
+
+### Commonly Cleared
+- Dropped Items
+- Experience Orbs
+- Arrows and Projectiles
+- Hostile Mobs (in excess)
+- Primed TNT (configurable)
+
+## Performance Tips
+
+1. **Adjust Clear Interval**: Lower intervals (shorter time) for busier servers
+2. **Customize Entity Lists**: Add problematic entities to the blacklist
+3. **Enable Lag Prevention**: Use mob limiters and redstone limiters for best results
+4. **Monitor Performance**: Use `/lagg tps` and `/lagg ram` regularly
+5. **World-Specific Clearing**: Configure different settings for different worlds
+
+## Troubleshooting
+
+### Common Issues
+
+**Entities not being cleared:**
+- Check if they're in the whitelist
+- Verify they're not named (if protection is enabled)
+- Ensure the plugin is enabled in that world
+
+**Performance still poor:**
+- Enable more lag prevention modules
+- Lower entity limits per chunk
+- Consider clearing more frequently
+
+**Commands not working:**
+- Check permissions
+- Verify the player has the required permission nodes
+- Try using full command `/lagg` instead of aliases
+
+### Support
+
+For support, bug reports, or feature requests:
+- GitHub Issues: [ClearLaggEnhanced Issues](https://github.com/BusyBee-Development/ClearLaggEnhanced/issues)
+- Discord: Contact the development team
+
+## Requirements
+
+- **Minecraft Version**: 1.20+
+- **Java Version**: 17+
+- **Optional Dependencies**:
+  - PlaceholderAPI (for placeholder support)
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
 
 ---
 
-**ClearLaggEnhanced** - Because your server deserves better than lag.
+*ClearLaggEnhanced - Keeping your server running smoothly*

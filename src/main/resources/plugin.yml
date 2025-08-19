@@ -1,91 +1,51 @@
 name: ClearLaggEnhanced
-version: '${project.version}'
-main: org.busybee.clearlaggenhanced.ClearLaggEnhanced
-description: 'The ultimate performance management plugin for Minecraft servers'
-author: djtmk
-api-version: '1.21'
-folia-supported: true
-
-softdepend:
-  - ProtocolLib
-  - Vault
-  - VaultUnlocked
-  - PlaceholderAPI
+version: ${project.version}
+main: com.clearlagenhanced.ClearLaggEnhanced
+api-version: 1.20
+authors: [djtmk]
+description: A modern, customizable lag prevention plugin for Minecraft servers
+website: https://github.com/BusyBee-Development/ClearLaggEnhanced
+softdepend: [PlaceholderAPI]
 
 commands:
-  clearlagg:
+  lagg:
     description: Main ClearLaggEnhanced command
-    usage: /<command> [subcommand] [args...]
-    aliases: [cle, clearlag, lagg]
+    usage: /lagg <subcommand>
+    aliases: [clearlagg, cl, cle]
 
 permissions:
-  clearlaggenhanced.*:
-    description: Access to all ClearLaggEnhanced features
-    default: op
+  CLE.*:
+    description: All ClearLaggEnhanced permissions
     children:
-      clearlaggenhanced.admin: true
-      clearlaggenhanced.check: true
-      clearlaggenhanced.reload: true
-      
-  clearlaggenhanced.admin:
-    description: Full administrative access
-    default: op
-    children:
-      clearlaggenhanced.clear: true
-      clearlaggenhanced.killmobs: true
-      clearlaggenhanced.unloadchunks: true
-      clearlaggenhanced.gc: true
-      clearlaggenhanced.config: true
-      clearlaggenhanced.profile: true
-      clearlaggenhanced.menu: true
-      
-  clearlaggenhanced.clear:
-    description: Clear entities manually
-    default: op
-    
-  clearlaggenhanced.killmobs:
-    description: Kill mobs with advanced filtering
-    default: op
-    
-  clearlaggenhanced.unloadchunks:
-    description: Unload chunks manually
-    default: op
-    
-  clearlaggenhanced.check:
-    description: View server performance diagnostics
-    default: op
-    
-  clearlaggenhanced.tps:
-    description: View TPS and MSPT information
-    default: op
-    
-  clearlaggenhanced.memory:
-    description: View memory usage information
-    default: op
-    
-  clearlaggenhanced.gc:
-    description: Force garbage collection
-    default: op
-    
-  clearlaggenhanced.reload:
-    description: Reload plugin configuration
-    default: op
-    
-  clearlaggenhanced.config:
-    description: Modify configuration in-game
-    default: op
-    
-  clearlaggenhanced.profile:
-    description: Access profiling commands
-    default: op
-    
-  clearlaggenhanced.menu:
-    description: Access the GUI control panel
-    default: op
-  
-  clearlaggenhanced.help:
-    description: Access to /cle help and /cle version
+      CLE.help: true
+      CLE.clear: true
+      CLE.next: true
+      CLE.tps: true
+      CLE.ram: true
+      CLE.chunkfinder: true
+      CLE.admin: true
+      CLE.reload: true
+  CLE.help:
+    description: Access to help command
     default: true
-  clearlaggenhanced.version:
-    description: View plugin version
+  CLE.clear:
+    description: Access to clear command
+    default: op
+  CLE.next:
+    description: Access to next command
     default: true
+  CLE.tps:
+    description: Access to tps command
+    default: op
+  CLE.ram:
+    description: Access to ram command
+    default: op
+  CLE.chunkfinder:
+    description: Access to chunkfinder command
+    default: op
+  CLE.admin:
+    description: Access to admin GUI
+    default: op
+  CLE.reload:
+    description: Access to reload command
+    default: op

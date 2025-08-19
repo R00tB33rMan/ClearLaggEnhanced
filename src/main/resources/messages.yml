@@ -1,0 +1,30 @@
+# ClearLaggEnhanced Messages
+# Version: 1.0
+
+warnings:
+  entity-clear: "<yellow>⚠ Entities will be cleared in <red>{seconds}</red> seconds!"
+
+notifications:
+  clear-complete: "<green>✓ Cleared <yellow>{count}</yellow> entities in <gray>{time}ms</gray>!"
+  no-permission: "<red>❌ You don't have permission to use this command!"
+  reload-complete: "<green>✓ ClearLaggEnhanced configuration reloaded!"
+
+commands:
+  help:
+    header: "<green>=== ClearLaggEnhanced Help ==="
+    clear: "<yellow>/lagg clear - Clear entities now"
+    next: "<yellow>/lagg next - Time until next clear"
+    tps: "<yellow>/lagg tps - Show server TPS"
+    ram: "<yellow>/lagg ram - Show memory usage"
+    admin: "<yellow>/lagg admin - Open admin GUI"
+    reload: "<yellow>/lagg reload - Reload configuration"
+
+performance:
+  tps: "<green>Current TPS: <yellow>{tps}"
+  memory: "<green>Memory Usage: <yellow>{usage} <gray>({percentage}%)"
+  entities: "<green>Total Entities: <yellow>{count}"
+
+next-clear:
+  disabled: "<yellow>⚠ Automatic entity clearing is disabled"
+  imminent: "<green>⏰ Next clear: Any moment now!"
+  scheduled: "<color>⏰ Next automatic clear in: <yellow>{time}</yellow>"

@@ -1,0 +1,97 @@
+# ClearLaggEnhanced Configuration
+# Plugin Version: 1.0
+
+# Entity Clearing Configuration
+entity-clearing:
+  enabled: true
+  interval: 300  # Clear interval in seconds (5 minutes)
+  protect-named-entities: true
+  protect-tamed-entities: true
+  
+  # Worlds to clear entities in (empty list = all worlds)
+  worlds: []
+  
+  # Entities to always clear (blacklist)
+  blacklist:
+    - "DROPPED_ITEM"
+    - "ARROW"
+    - "EXPERIENCE_ORB"
+    - "PRIMED_TNT"
+    - "FIREWORK"
+    - "AREA_EFFECT_CLOUD"
+  
+  # Entities to never clear (whitelist/protected)
+  whitelist:
+    - "PLAYER"
+    - "VILLAGER"
+    - "IRON_GOLEM"
+    - "SNOW_GOLEM"
+    - "ARMOR_STAND"
+    - "ITEM_FRAME"
+    - "PAINTING"
+    - "MINECART"
+    - "BOAT"
+
+# Lag Prevention Modules
+lag-prevention:
+  
+  # Mob Limiter
+  mob-limiter:
+    enabled: true
+    max-mobs-per-chunk: 50
+    
+  # Redstone Limiter
+  redstone-limiter:
+    enabled: true
+    max-redstone-per-chunk: 100
+    
+  # Hopper Limiter
+  hopper-limiter:
+    enabled: true
+    transfer-cooldown: 8  # ticks
+    
+  # Spawner Limiter
+  spawner-limiter:
+    enabled: true
+    spawn-delay-multiplier: 1.5
+
+# Chunk Finder Configuration
+chunk-finder:
+  radius: 10  # chunks around player to scan
+  entity-threshold: 50  # entities per chunk to consider "laggy"
+
+# Notification Settings
+notifications:
+  # Broadcast times (seconds before clear)
+  broadcast-times: [60, 30, 10, 5]
+  
+  # Notification type: CHAT, ACTION_BAR, or TITLE
+  type: "ACTION_BAR"
+  
+  # Sound settings
+  sound:
+    enabled: true
+    name: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.2
+
+# Performance Monitoring
+performance:
+  update-interval: 20  # ticks between updates
+  
+# Database Settings
+database:
+  type: "sqlite"  # sqlite or mysql
+  file: "clearlagg.db"
+  
+  # MySQL settings (if using mysql)
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "clearlagg"
+    username: "root"
+    password: "password"
+    ssl: false
+
+# Debug mode
+debug: false

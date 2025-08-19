@@ -1,0 +1,14 @@
+com\clearlagenhanced\managers\MessageManager.class
+com\clearlagenhanced\utils\MessageUtils.class
+com\clearlagenhanced\managers\ConfigManager.class
+com\clearlagenhanced\managers\EntityManager.class
+com\clearlagenhanced\managers\GUIManager.class
+com\clearlagenhanced\managers\PerformanceManager.class
+com\clearlagenhanced\database\DatabaseManager.class
+com\clearlagenhanced\managers\LagPreventionManager.class
+com\clearlagenhanced\managers\PerformanceManager$ChunkInfo.class
+com\clearlagenhanced\database\DatabaseManager$LaggyChunkData.class
+com\clearlagenhanced\ClearLaggEnhanced.class
+com\clearlagenhanced\managers\GUIManager$1.class
+com\clearlagenhanced\managers\NotificationManager.class
+com\clearlagenhanced\commands\LaggCommand.class
