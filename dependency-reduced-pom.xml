@@ -4,7 +4,7 @@
   <groupId>com.clearlagenhanced</groupId>
   <artifactId>ClearLaggEnhanced</artifactId>
   <name>ClearLaggEnhanced</name>
-  <version>1.0</version>
+  <version>1.2-Beta</version>
   <description>A modern, customizable lag prevention plugin for Minecraft servers</description>
   <build>
     <resources>

@@ -6,7 +6,7 @@
 
     <groupId>com.clearlagenhanced</groupId>
     <artifactId>ClearLaggEnhanced</artifactId>
-    <version>1.0</version>
+    <version>1.2-Beta</version>
     <packaging>jar</packaging>
 
     <name>ClearLaggEnhanced</name>

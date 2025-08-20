@@ -138,15 +138,13 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
         MessageUtils.sendMessage(sender, Component.text("Clearing entities...")
                 .color(NamedTextColor.GREEN));
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        Bukkit.getScheduler().runTask(plugin, () -> {
             long startTime = System.currentTimeMillis();
             int cleared = plugin.getEntityManager().clearEntities();
             long duration = System.currentTimeMillis() - startTime;
 
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                MessageUtils.sendMessage(sender, Component.text("Cleared " + cleared + " entities in " + duration + "ms")
-                        .color(NamedTextColor.GREEN));
-            });
+            MessageUtils.sendMessage(sender, Component.text("Cleared " + cleared + " entities in " + duration + "ms")
+                    .color(NamedTextColor.GREEN));
         });
     }
     

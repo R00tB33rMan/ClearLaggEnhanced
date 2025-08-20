@@ -10,7 +10,7 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.CompletableFuture;
 
 public class EntityManager {
     
@@ -55,31 +55,48 @@ public class EntityManager {
     }
     
     public int clearEntities() {
-        AtomicInteger cleared = new AtomicInteger(0);
-        
+        if (Bukkit.isPrimaryThread()) {
+            int cleared = clearEntitiesSync();
+            if (clearTask != null) {
+                nextClearTime = System.currentTimeMillis() + (clearInterval * 1000);
+            }
+            plugin.getLogger().info("Cleared " + cleared + " entities");
+            return cleared;
+        } else {
+            CompletableFuture<Integer> future = new CompletableFuture<>();
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                int cleared = clearEntitiesSync();
+                if (clearTask != null) {
+                    nextClearTime = System.currentTimeMillis() + (clearInterval * 1000);
+                }
+                plugin.getLogger().info("Cleared " + cleared + " entities");
+                future.complete(cleared);
+            });
+            return future.join();
+        }
+    }
+
+    private int clearEntitiesSync() {
+        int cleared = 0;
+
         List<String> blacklist = configManager.getStringList("entity-clearing.blacklist");
         List<String> whitelist = configManager.getStringList("entity-clearing.whitelist");
         List<String> worlds = configManager.getStringList("entity-clearing.worlds");
-        
+
         for (World world : Bukkit.getWorlds()) {
             if (!worlds.isEmpty() && !worlds.contains(world.getName())) {
                 continue;
             }
-            
+
             for (Entity entity : world.getEntities()) {
                 if (shouldClearEntity(entity, blacklist, whitelist)) {
                     entity.remove();
-                    cleared.incrementAndGet();
+                    cleared++;
                 }
             }
         }
 
-        if (clearTask != null) {
-            nextClearTime = System.currentTimeMillis() + (clearInterval * 1000);
-        }
-        
-        plugin.getLogger().info("Cleared " + cleared.get() + " entities");
-        return cleared.get();
+        return cleared;
     }
     
     private boolean shouldClearEntity(Entity entity, List<String> blacklist, List<String> whitelist) {
