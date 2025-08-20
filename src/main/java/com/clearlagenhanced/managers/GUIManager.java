@@ -246,12 +246,12 @@ public class GUIManager implements Listener {
 
         event.setCancelled(true);
 
-        if (event.getClickedInventory() == null || !event.getClickedInventory().equals(event.getView().getTopInventory()) || event.getCurrentItem() == null) {
-            return;
-        }
+        int topSize = event.getView().getTopInventory().getSize();
+        if (event.getRawSlot() < 0 || event.getRawSlot() >= topSize) return;
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType().isAir()) return;
 
         String currentGUI = openGUIs.get(player.getUniqueId());
-        int slot = event.getSlot();
+        int slot = event.getRawSlot();
 
         switch (currentGUI) {
             case "main":
@@ -357,9 +357,16 @@ public class GUIManager implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         UUID playerId = event.getPlayer().getUniqueId();
-        if (!awaitingInput.containsKey(playerId)) {
-            openGUIs.remove(playerId);
+
+        if (awaitingInput.containsKey(playerId)) {
+            return;
         }
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (!awaitingInput.containsKey(playerId) && !openGUIs.containsKey(playerId)) {
+                openGUIs.remove(playerId); // harmless if absent
+            }
+        });
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

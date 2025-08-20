@@ -30,12 +30,10 @@ public class NotificationManager {
         List<Integer> broadcastTimes = configManager.getIntegerList("notifications.broadcast-times");
         
         if (broadcastTimes.isEmpty()) {
-            // If no broadcast times configured, proceed directly to clear
             Bukkit.getScheduler().runTaskLater(plugin, this::performClear, 20L);
             return;
         }
-        
-        // Schedule warnings for each broadcast time
+
         int maxTime = broadcastTimes.stream().max(Integer::compareTo).orElse(0);
         
         for (int seconds : broadcastTimes) {
@@ -44,28 +42,23 @@ public class NotificationManager {
                 sendWarning(seconds);
             }, delay);
         }
-        
-        // Schedule the actual clear after all warnings
+
         Bukkit.getScheduler().runTaskLater(plugin, this::performClear, maxTime * 20L);
     }
     
     private void sendWarning(int seconds) {
-        // Read configuration values
         String notificationType = configManager.getString("notifications.type", "ACTION_BAR").toUpperCase();
         boolean soundEnabled = configManager.getBoolean("notifications.sound.enabled", true);
         String soundName = configManager.getString("notifications.sound.name", "BLOCK_NOTE_BLOCK_PLING");
         float volume = (float) configManager.getDouble("notifications.sound.volume", 1.0);
         float pitch = (float) configManager.getDouble("notifications.sound.pitch", 1.2);
-        
-        // Create message with placeholders
+
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("seconds", String.valueOf(seconds));
         
         Component message = messageManager.getMessage("warnings.entity-clear", placeholders);
-        
-        // Send notification to all online players
+
         for (Player player : Bukkit.getOnlinePlayers()) {
-            // Send message based on configured type (exclusive)
             switch (notificationType) {
                 case "CHAT":
                     player.sendMessage(message);
@@ -90,13 +83,11 @@ public class NotificationManager {
                     break;
                     
                 default:
-                    // Fallback to ACTION_BAR if invalid type
                     player.sendActionBar(message);
                     plugin.getLogger().warning("Invalid notification type: " + notificationType + ". Using ACTION_BAR as fallback.");
                     break;
             }
-            
-            // Play sound if enabled
+
             if (soundEnabled) {
                 try {
                     Sound sound = Sound.valueOf(soundName.toUpperCase());
@@ -106,8 +97,7 @@ public class NotificationManager {
                 }
             }
         }
-        
-        // Log the warning
+
         plugin.getLogger().info("Sent entity clear warning: " + seconds + " seconds remaining");
     }
     
@@ -115,35 +105,27 @@ public class NotificationManager {
         long startTime = System.currentTimeMillis();
         int cleared = plugin.getEntityManager().clearEntities();
         long duration = System.currentTimeMillis() - startTime;
-        
-        // Create completion message
+
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("count", String.valueOf(cleared));
         placeholders.put("time", String.valueOf(duration));
         
         Component message = messageManager.getMessage("notifications.clear-complete", placeholders);
-        
-        // Send completion message to all players (always as chat message)
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(message);
         }
         
         plugin.getLogger().info("Cleared " + cleared + " entities in " + duration + "ms");
     }
-    
-    /**
-     * Cancel any pending warning tasks
-     */
+
     public void cancelWarnings() {
         if (warningTask != null && !warningTask.isCancelled()) {
             warningTask.cancel();
             warningTask = null;
         }
     }
-    
-    /**
-     * Send an immediate warning for manual clear commands
-     */
+
     public void sendImmediateWarning(int seconds) {
         sendWarning(seconds);
     }

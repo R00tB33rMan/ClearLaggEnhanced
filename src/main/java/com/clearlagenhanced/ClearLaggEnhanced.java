@@ -59,7 +59,6 @@ public class ClearLaggEnhanced extends JavaPlugin {
         
         MessageUtils.initialize(messageManager);
 
-        // Start automatic entity clearing task after all managers are initialized
         getLogger().info("All managers initialized successfully!");
     }
     
@@ -71,35 +70,27 @@ public class ClearLaggEnhanced extends JavaPlugin {
     public static ClearLaggEnhanced getInstance() {
         return instance;
     }
-    
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
     }
-    
     public ConfigManager getConfigManager() {
         return configManager;
     }
-    
     public MessageManager getMessageManager() {
         return messageManager;
     }
-    
     public EntityManager getEntityManager() {
         return entityManager;
     }
-    
     public LagPreventionManager getLagPreventionManager() {
         return lagPreventionManager;
     }
-    
     public PerformanceManager getPerformanceManager() {
         return performanceManager;
     }
-    
     public NotificationManager getNotificationManager() {
         return notificationManager;
     }
-    
     public GUIManager getGUIManager() {
         return guiManager;
     }

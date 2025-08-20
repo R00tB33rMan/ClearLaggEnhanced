@@ -36,7 +36,7 @@ public class LagPreventionManager {
         if (!configManager.getBoolean("lag-prevention.redstone-limiter.enabled", true)) {
             return false;
         }
-        
+
         // This would need more complex implementation to detect redstone circuits
         // For now, return false as placeholder
         return false;
@@ -54,7 +54,6 @@ public class LagPreventionManager {
     
     public void optimizeChunk(Chunk chunk) {
         if (isMobLimitReached(chunk)) {
-            // Remove excess mobs
             int removed = 0;
             int maxMobs = configManager.getInt("lag-prevention.mob-limiter.max-mobs-per-chunk", 50);
             

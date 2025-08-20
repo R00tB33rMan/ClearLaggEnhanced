@@ -24,7 +24,7 @@ public class ConfigManager {
     
     private void debugLog(String message) {
         if (debuggingInProgress) {
-            return; // Prevent recursive calls
+            return;
         }
         
         debuggingInProgress = true;
@@ -43,20 +43,44 @@ public class ConfigManager {
         return value;
     }
     
+    public boolean getBoolean(String path) {
+        boolean value = config.getBoolean(path);
+        debugLog("Getting boolean " + path + " = " + value);
+        return value;
+    }
+
     public int getInt(String path, int defaultValue) {
         int value = config.getInt(path, defaultValue);
         debugLog("Getting int " + path + " = " + value);
         return value;
     }
-    
+
+    public int getInt(String path) {
+        int value = config.getInt(path);
+        debugLog("Getting int " + path + " = " + value);
+        return value;
+    }
+
     public double getDouble(String path, double defaultValue) {
         double value = config.getDouble(path, defaultValue);
         debugLog("Getting double " + path + " = " + value);
         return value;
     }
-    
+
+    public double getDouble(String path) {
+        double value = config.getDouble(path);
+        debugLog("Getting double " + path + " = " + value);
+        return value;
+    }
+
     public String getString(String path, String defaultValue) {
         String value = config.getString(path, defaultValue);
+        debugLog("Getting string " + path + " = " + value);
+        return value;
+    }
+
+    public String getString(String path) {
+        String value = config.getString(path);
         debugLog("Getting string " + path + " = " + value);
         return value;
     }
@@ -76,8 +100,7 @@ public class ConfigManager {
     public void set(String path, Object value) {
         debugLog("Setting " + path + " = " + value);
         config.set(path, value);
-        
-        // Save the config synchronously to ensure it's written immediately
+
         try {
             plugin.saveConfig();
             debugLog("Configuration saved successfully");

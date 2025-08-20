@@ -15,8 +15,7 @@ public class MessageUtils {
     public static void initialize(MessageManager manager) {
         messageManager = manager;
     }
-    
-    // Original Player-specific methods (preserved for compatibility)
+
     public static void sendMessage(Player player, String path) {
         sendMessage(player, path, new HashMap<>());
     }
@@ -36,8 +35,7 @@ public class MessageUtils {
         placeholders.put(placeholder, value);
         sendMessage(player, path, placeholders);
     }
-    
-    // New CommandSender methods (for commands that can be used by console)
+
     public static void sendMessage(CommandSender sender, Component message) {
         sender.sendMessage(message);
     }
@@ -54,10 +52,8 @@ public class MessageUtils {
         
         Component message;
         if (sender instanceof Player) {
-            // Use player-specific message handling if sender is a player
             message = messageManager.getMessage(path, placeholders, (Player) sender);
         } else {
-            // Use generic message handling for console/other senders
             message = messageManager.getMessage(path, placeholders);
         }
         sender.sendMessage(message);
@@ -68,8 +64,7 @@ public class MessageUtils {
         placeholders.put(placeholder, value);
         sendMessage(sender, path, placeholders);
     }
-    
-    // Utility methods (preserved)
+
     public static Component getMessage(String path) {
         return getMessage(path, new HashMap<>());
     }

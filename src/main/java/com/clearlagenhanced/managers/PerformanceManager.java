@@ -25,10 +25,8 @@ public class PerformanceManager {
 
     public double getTPS() {
         try {
-            // Use Paper's TPS method if available
             return Bukkit.getServer().getTPS()[0];
         } catch (Exception e) {
-            // Fallback calculation
             return 20.0;
         }
     }
@@ -72,15 +70,10 @@ public class PerformanceManager {
         return getMemoryUsagePercentage() > 85.0;
     }
 
-    /**
-     * Asynchronously finds laggy chunks around the player and reports the results
-     * @param player The player to scan around
-     */
     public void findLaggyChunksAsync(Player player) {
         MessageUtils.sendMessage(player, Component.text("Scanning for laggy chunks...")
                 .color(NamedTextColor.GREEN));
 
-        // Run chunk analysis asynchronously
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             World world = player.getWorld();
             int radius = configManager.getInt("chunk-finder.radius", 10);
@@ -92,7 +85,6 @@ public class PerformanceManager {
 
             List<ChunkInfo> laggyChunks = new ArrayList<>();
 
-            // Scan chunks around player
             for (int x = playerX - radius; x <= playerX + radius; x++) {
                 for (int z = playerZ - radius; z <= playerZ + radius; z++) {
                     if (world.isChunkLoaded(x, z)) {
@@ -107,7 +99,6 @@ public class PerformanceManager {
                 }
             }
 
-            // Send results back on main thread
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (laggyChunks.isEmpty()) {
                     MessageUtils.sendMessage(player, Component.text("No laggy chunks found within " + radius + " chunks!")
@@ -116,7 +107,6 @@ public class PerformanceManager {
                     MessageUtils.sendMessage(player, Component.text("=== Top 10 Laggy Chunks Found ===")
                             .color(NamedTextColor.RED));
 
-                    // Sort by entity count (highest first)
                     laggyChunks.sort((a, b) -> Integer.compare(b.entityCount, a.entityCount));
 
                     int maxResults = Math.min(laggyChunks.size(), 10);
@@ -139,9 +129,6 @@ public class PerformanceManager {
         });
     }
 
-    /**
-     * Helper class to store chunk information for sorting
-     */
     private static class ChunkInfo {
         final int x, z, entityCount, distance;
 

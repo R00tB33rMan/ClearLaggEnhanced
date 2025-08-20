@@ -17,7 +17,6 @@ import java.util.List;
 public class LaggCommand implements CommandExecutor, TabCompleter {
     
     private final ClearLaggEnhanced plugin;
-    
     public LaggCommand(ClearLaggEnhanced plugin) {
         this.plugin = plugin;
     }
@@ -138,14 +137,12 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
     private void handleClear(CommandSender sender, String[] args) {
         MessageUtils.sendMessage(sender, Component.text("Clearing entities...")
                 .color(NamedTextColor.GREEN));
-        
-        // Run the clearing asynchronously to avoid blocking
+
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             long startTime = System.currentTimeMillis();
             int cleared = plugin.getEntityManager().clearEntities();
             long duration = System.currentTimeMillis() - startTime;
-            
-            // Send result back on main thread
+
             Bukkit.getScheduler().runTask(plugin, () -> {
                 MessageUtils.sendMessage(sender, Component.text("Cleared " + cleared + " entities in " + duration + "ms")
                         .color(NamedTextColor.GREEN));

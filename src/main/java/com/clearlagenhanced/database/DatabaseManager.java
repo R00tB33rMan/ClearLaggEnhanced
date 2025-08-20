@@ -1,7 +1,6 @@
 package com.clearlagenhanced.database;
 
 import com.clearlagenhanced.ClearLaggEnhanced;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.sql.*;
