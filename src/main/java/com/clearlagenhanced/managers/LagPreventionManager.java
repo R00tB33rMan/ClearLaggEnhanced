@@ -24,7 +24,7 @@ public class LagPreventionManager {
         int mobCount = 0;
         
         for (Entity entity : chunk.getEntities()) {
-            if (entity.getType() != EntityType.PLAYER && entity.getType() != EntityType.ITEM) {
+            if (entity instanceof org.bukkit.entity.LivingEntity && entity.getType() != EntityType.PLAYER) {
                 mobCount++;
             }
         }
@@ -53,20 +53,34 @@ public class LagPreventionManager {
     }
     
     public void optimizeChunk(Chunk chunk) {
-        if (isMobLimitReached(chunk)) {
-            int removed = 0;
-            int maxMobs = configManager.getInt("lag-prevention.mob-limiter.max-mobs-per-chunk", 50);
-            
-            for (Entity entity : chunk.getEntities()) {
-                if (removed >= (chunk.getEntities().length - maxMobs)) {
-                    break;
-                }
-                
-                if (entity.getType() != EntityType.PLAYER && 
-                    entity.getCustomName() == null) {
-                    entity.remove();
-                    removed++;
-                }
+        if (!isMobLimitReached(chunk)) {
+            return;
+        }
+
+        int maxMobs = configManager.getInt("lag-prevention.mob-limiter.max-mobs-per-chunk", 50);
+
+        // Count living mobs (excluding players)
+        int livingCount = 0;
+        for (Entity e : chunk.getEntities()) {
+            if (e instanceof org.bukkit.entity.LivingEntity && e.getType() != EntityType.PLAYER) {
+                livingCount++;
+            }
+        }
+
+        int over = livingCount - maxMobs;
+        if (over <= 0) {
+            return;
+        }
+
+        // Remove only the excess living, unnamed, non-player entities
+        for (Entity entity : chunk.getEntities()) {
+            if (over <= 0) break;
+
+            if (entity instanceof org.bukkit.entity.LivingEntity
+                    && entity.getType() != EntityType.PLAYER
+                    && entity.getCustomName() == null) {
+                entity.remove();
+                over--;
             }
         }
     }

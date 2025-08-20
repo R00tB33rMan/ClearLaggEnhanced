@@ -1,0 +1,72 @@
+package com.clearlagenhanced.listeners;
+
+import com.clearlagenhanced.ClearLaggEnhanced;
+import com.clearlagenhanced.managers.LagPreventionManager;
+import org.bukkit.Chunk;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.SpawnerSpawnEvent;
+
+public class MobLimiterListener implements Listener {
+
+    private final ClearLaggEnhanced plugin;
+    private final LagPreventionManager limiter;
+
+    public MobLimiterListener(ClearLaggEnhanced plugin) {
+        this.plugin = plugin;
+        this.limiter = plugin.getLagPreventionManager();
+    }
+
+    // Handle natural/player/spawner/etc. creature spawns
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        LivingEntity entity = event.getEntity();
+        if (!isCountable(entity)) return;
+
+        Chunk chunk = entity.getLocation().getChunk();
+        if (limiter.isMobLimitReached(chunk)) {
+            event.setCancelled(true);
+            if (plugin.getConfigManager().getBoolean("debug", false)) {
+                plugin.getLogger().info("[MobLimiter] Cancelled " + entity.getType() +
+                        " spawn in chunk " + chunk.getX() + "," + chunk.getZ() +
+                        " (limit reached)");
+            }
+        }
+    }
+
+    // Optional explicit spawner hook (CreatureSpawnEvent already covers it, but this offers clarity)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onSpawnerSpawn(SpawnerSpawnEvent event) {
+        Entity entity = event.getEntity();
+        if (!isCountable(entity)) return;
+
+        Chunk chunk = entity.getLocation().getChunk();
+        if (limiter.isMobLimitReached(chunk)) {
+            event.setCancelled(true);
+            if (plugin.getConfigManager().getBoolean("debug", false)) {
+                plugin.getLogger().info("[MobLimiter] Cancelled spawner " + entity.getType() +
+                        " spawn in chunk " + chunk.getX() + "," + chunk.getZ() +
+                        " (limit reached)");
+            }
+        }
+    }
+
+    // Optional: post-spawn trim as a safety net for batch spawns
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onCreatureSpawnMonitor(CreatureSpawnEvent event) {
+        final Chunk chunk = event.getEntity().getLocation().getChunk();
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            limiter.optimizeChunk(chunk);
+        });
+    }
+
+    private boolean isCountable(Entity entity) {
+        if (!(entity instanceof LivingEntity)) return false;
+        return entity.getType() != EntityType.PLAYER;
+    }
+}

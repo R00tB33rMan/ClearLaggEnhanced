@@ -26,6 +26,14 @@ public class ClearLaggEnhanced extends JavaPlugin {
         
         initializeManagers();
         registerCommands();
+        getServer().getPluginManager().registerEvents(
+                new com.clearlagenhanced.listeners.MobLimiterListener(this), this);
+        getServer().getPluginManager().registerEvents(
+                new com.clearlagenhanced.listeners.RedstoneLimiterListener(this), this);
+        getServer().getPluginManager().registerEvents(
+                new com.clearlagenhanced.listeners.HopperLimiterListener(this), this);
+        getServer().getPluginManager().registerEvents(
+                new com.clearlagenhanced.listeners.SpawnerLimiterListener(this), this);
         
         getLogger().info("ClearLaggEnhanced has been enabled!");
     }
