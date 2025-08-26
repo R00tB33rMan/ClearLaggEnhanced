@@ -45,15 +45,12 @@ public class MessageManager {
     public void reload() {
         loadMessages();
     }
-    
     public FileConfiguration getConfig() {
         return messages;
     }
-    
     public String getRawMessage(String path) {
         return messages.getString(path, "Message not found: " + path);
     }
-    
     public String getRawMessage(String path, String defaultValue) {
         return messages.getString(path, defaultValue);
     }

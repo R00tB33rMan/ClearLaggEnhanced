@@ -24,7 +24,6 @@ public class MobLimiterListener implements Listener {
         this.debug = plugin.getConfigManager().getBoolean("debug", false);
     }
 
-    // Handle natural/player/spawner/etc. creature spawns
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
@@ -46,7 +45,6 @@ public class MobLimiterListener implements Listener {
         }
     }
 
-    // Optional explicit spawner hook (CreatureSpawnEvent already covers it, but this offers clarity)
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSpawnerSpawn(SpawnerSpawnEvent event) {
         Entity entity = event.getEntity();
@@ -68,7 +66,6 @@ public class MobLimiterListener implements Listener {
         }
     }
 
-    // Optional: post-spawn trim as a safety net for batch spawns
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCreatureSpawnMonitor(CreatureSpawnEvent event) {
         final Chunk chunk = event.getEntity().getLocation().getChunk();

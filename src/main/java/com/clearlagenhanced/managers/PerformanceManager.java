@@ -2,8 +2,6 @@ package com.clearlagenhanced.managers;
 
 import com.clearlagenhanced.ClearLaggEnhanced;
 import com.clearlagenhanced.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;

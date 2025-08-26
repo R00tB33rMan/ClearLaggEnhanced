@@ -45,7 +45,6 @@ public class EntityManager {
     }
 
     public void restartTask() {
-        // Cancel existing task
         if (clearTask != null) {
             clearTask.cancel();
             clearTask = null;

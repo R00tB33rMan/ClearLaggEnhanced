@@ -9,10 +9,6 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-/**
- * Periodic sweeper that enforces per-chunk caps for configured non-mob entity types.
- * Also exposes a throttled admin notification helper used by the proactive listener.
- */
 public class MiscEntitySweepService {
 
     private final ClearLaggEnhanced plugin;
@@ -32,7 +28,6 @@ public class MiscEntitySweepService {
     public MiscEntitySweepService(ClearLaggEnhanced plugin, ConfigManager cfg) {
         this.plugin = plugin;
 
-        // Load config
         this.caps = loadCaps(cfg);
         this.worldFilter = new HashSet<>(cfg.getStringList("lag-prevention.misc-entity-limiter.worlds"));
         this.protectNamed = cfg.getBoolean("lag-prevention.misc-entity-limiter.protect.named", true);
@@ -153,7 +148,6 @@ public class MiscEntitySweepService {
         return min;
     }
 
-    // Public so listener can reuse throttled notification path
     public void notifyAdmins(Chunk chunk, EntityType type, int count, boolean blocked) {
         long nowTick = chunk.getWorld().getFullTime();
         String nkey = chunk.getWorld().getName() + ":" + chunk.getX() + "," + chunk.getZ() + ":" + type.name();

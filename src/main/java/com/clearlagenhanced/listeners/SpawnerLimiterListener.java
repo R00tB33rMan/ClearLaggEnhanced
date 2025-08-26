@@ -13,17 +13,11 @@ import org.bukkit.event.entity.SpawnerSpawnEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Spawner limiter: slows down spawners by multiplying the next spawn delay
- * and cancels spawns if the chunk has reached the mob cap.
- */
 public class SpawnerLimiterListener implements Listener {
 
     private final ClearLaggEnhanced plugin;
     private final ConfigManager config;
     private final Set<String> worldFilter = new HashSet<>();
-
-    // Cached config values
     private final boolean enabled;
     private final double multiplier;
     private final boolean debug;
@@ -58,7 +52,6 @@ public class SpawnerLimiterListener implements Listener {
         CreatureSpawner spawner = event.getSpawner();
         if (!isWorldAllowed(spawner.getWorld())) return;
 
-        // Respect mob limiter: if the chunk is at/over cap, cancel immediately
         Chunk chunk = event.getLocation().getChunk();
         if (plugin.getLagPreventionManager().isMobLimitReached(chunk)) {
             event.setCancelled(true);
@@ -74,7 +67,6 @@ public class SpawnerLimiterListener implements Listener {
             return;
         }
 
-        // Increase the NEXT spawn delay by multiplier
         try {
             int current = Math.max(1, spawner.getDelay());
             int newDelay = (int) Math.min((long) (current * multiplier()), 32767L);

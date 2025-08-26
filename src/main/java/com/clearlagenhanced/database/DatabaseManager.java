@@ -42,7 +42,6 @@ public class DatabaseManager {
         HikariConfig hc = new HikariConfig();
         String url = "jdbc:sqlite:" + databasePath;
         hc.setJdbcUrl(url);
-        // Ensure SQLite driver is available (server-provided when possible)
         hc.setDriverClassName("org.sqlite.JDBC");
         hc.setMaximumPoolSize(5);
         hc.setMinimumIdle(1);

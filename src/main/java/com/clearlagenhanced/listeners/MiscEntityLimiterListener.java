@@ -19,17 +19,12 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
 
-/**
- * Proactive limiter for miscellaneous (non-mob) entities per chunk.
- * Cancels/undoes spawns/placements that would exceed configured caps.
- * Runtime notices go to in-game admins (permission CLE.admin) and are throttled by the sweep service.
- */
 public class MiscEntityLimiterListener implements Listener {
 
     private final ClearLaggEnhanced plugin;
     private final ConfigManager cfg;
     private final boolean enabled;
-    private final Map<EntityType, Integer> caps; // only present entries are enforced
+    private final Map<EntityType, Integer> caps;
     private final Set<String> worldFilter;
     private final boolean protectNamed;
     private final Set<String> protectedTags;
@@ -90,7 +85,7 @@ public class MiscEntityLimiterListener implements Listener {
         Entity e = event.getEntity();
         if (!caps.containsKey(e.getType())) return;
         if (!isWorldAllowed(e.getWorld())) return;
-        if (exempt(e)) return; // allow protected entities
+        if (exempt(e)) return;
         if (overCapIfAdded(e.getLocation().getChunk(), e.getType())) {
             event.setCancelled(true);
             if (notifier != null) notifier.notifyAdmins(event.getLocation().getChunk(), e.getType(), 0, true);
@@ -116,7 +111,6 @@ public class MiscEntityLimiterListener implements Listener {
         if (!caps.containsKey(e.getType())) return;
         if (!isWorldAllowed(e.getWorld())) return;
         if (overCapIfAdded(e.getLocation().getChunk(), e.getType())) {
-            // Cannot cancel; schedule removal immediately
             Bukkit.getScheduler().runTask(plugin, e::remove);
             if (notifier != null) notifier.notifyAdmins(e.getLocation().getChunk(), e.getType(), 1, false);
         }

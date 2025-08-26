@@ -9,8 +9,6 @@ public class LagPreventionManager {
 
     private final ClearLaggEnhanced plugin;
     private final ConfigManager configManager;
-
-    // Cached hot-path config values
     private final boolean mobLimiterEnabled;
     private final int maxMobsPerChunk;
     private final boolean hopperLimiterEnabled;
@@ -19,7 +17,6 @@ public class LagPreventionManager {
     public LagPreventionManager(ClearLaggEnhanced plugin) {
         this.plugin = plugin;
         this.configManager = plugin.getConfigManager();
-        // Snapshot frequently used config values (reload requires re-instantiation)
         this.mobLimiterEnabled = configManager.getBoolean("lag-prevention.mob-limiter.enabled", true);
         this.maxMobsPerChunk = configManager.getInt("lag-prevention.mob-limiter.max-mobs-per-chunk", 50);
         this.hopperLimiterEnabled = configManager.getBoolean("lag-prevention.hopper-limiter.enabled", true);
@@ -40,13 +37,11 @@ public class LagPreventionManager {
 
     public boolean isRedstoneExcessive(Chunk chunk) {
         if (!redstoneLimiterEnabled) return false;
-        // Placeholder for future heuristics
         return false;
     }
 
     public boolean areHoppersExcessive(Chunk chunk) {
         if (!hopperLimiterEnabled) return false;
-        // Placeholder for future heuristics
         return false;
     }
 
@@ -55,7 +50,6 @@ public class LagPreventionManager {
             return;
         }
 
-        // Count living mobs (excluding players)
         int livingCount = 0;
         for (Entity e : chunk.getEntities()) {
             if (e instanceof org.bukkit.entity.LivingEntity && e.getType() != EntityType.PLAYER) {
@@ -68,7 +62,6 @@ public class LagPreventionManager {
             return;
         }
 
-        // Remove only the excess living, unnamed, non-player entities
         for (Entity entity : chunk.getEntities()) {
             if (over <= 0) break;
 

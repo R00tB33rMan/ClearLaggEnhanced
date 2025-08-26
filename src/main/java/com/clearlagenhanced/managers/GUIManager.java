@@ -252,7 +252,7 @@ public class GUIManager implements Listener {
 
         Inventory top = event.getView().getTopInventory();
         InventoryHolder holder = top.getHolder();
-        if (!(holder instanceof GUIHolder guiHolder)) return; // Not our GUI
+        if (!(holder instanceof GUIHolder guiHolder)) return;
 
         Player player = (Player) event.getWhoClicked();
         int topSize = top.getSize();
@@ -260,7 +260,6 @@ public class GUIManager implements Listener {
         boolean clickedTop = raw >= 0 && raw < topSize;
 
         if (clickedTop) {
-            // Disallow any interaction with GUI items
             event.setCancelled(true);
             ItemStack clicked = event.getCurrentItem();
             if (clicked == null || clicked.getType().isAir()) return;
@@ -279,16 +278,13 @@ public class GUIManager implements Listener {
             return;
         }
 
-        // Bottom inventory clicked while our GUI is open
         InventoryAction action = event.getAction();
 
-        // Block shift-click transfers
         if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
             event.setCancelled(true);
             return;
         }
 
-        // Block double-click collect that would pull from the GUI
         if (action == InventoryAction.COLLECT_TO_CURSOR) {
             ItemStack cursor = event.getCursor();
             if (cursor != null && !cursor.getType().isAir()) {
@@ -300,7 +296,6 @@ public class GUIManager implements Listener {
                 }
             }
         }
-        // Otherwise allow player-inventory actions
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -400,7 +395,6 @@ public class GUIManager implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         UUID playerId = event.getPlayer().getUniqueId();
-        // Always clear GUI state when any inventory is closed
         openGUIs.remove(playerId);
     }
 

@@ -19,14 +19,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Redstone limiter that enforces a per-chunk, per-tick budget for redstone activity.
- * It neutralizes redstone current changes and cancels piston/dispense events when
- * the budget is exceeded, as configured in config.yml under lag-prevention.redstone-limiter.
- */
 public class RedstoneLimiterListener implements Listener {
 
-    // Costs allow weighting heavier actions more than simple current changes
     private static final int COST_REDSTONE_CHANGE = 1;
     private static final int COST_PISTON = 4;
     private static final int COST_DISPENSE = 2;
@@ -36,8 +30,6 @@ public class RedstoneLimiterListener implements Listener {
     private final Map<ChunkKey, Integer> creditsUsed = new HashMap<>();
     private final Set<String> worldFilter = new HashSet<>();
     private int taskId = -1;
-
-    // Cached values to avoid per-event config accesses
     private final boolean enabled;
     private final int maxPerChunk;
     private final boolean debug;
@@ -45,18 +37,14 @@ public class RedstoneLimiterListener implements Listener {
     public RedstoneLimiterListener(ClearLaggEnhanced plugin) {
         this.plugin = plugin;
         this.config = plugin.getConfigManager();
-
-        // Cache flags
         this.enabled = config.getBoolean("lag-prevention.redstone-limiter.enabled", true);
         this.maxPerChunk = config.getInt("lag-prevention.redstone-limiter.max-redstone-per-chunk", 100);
         this.debug = config.getBoolean("debug", false);
 
-        // Optional list of worlds to apply limiter to (empty = all worlds)
         for (String w : config.getStringList("lag-prevention.redstone-limiter.worlds")) {
             worldFilter.add(w);
         }
 
-        // Reset per-chunk counters every tick
         this.taskId = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(
                 plugin, creditsUsed::clear, 1L, 1L
         );
@@ -72,7 +60,6 @@ public class RedstoneLimiterListener implements Listener {
     private boolean enabled() {
         return enabled;
     }
-
     private int maxPerChunk() {
         return maxPerChunk;
     }
@@ -85,10 +72,6 @@ public class RedstoneLimiterListener implements Listener {
         return new ChunkKey(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
     }
 
-    /**
-     * Returns true if the budget has already been exceeded (or becomes exceeded by this cost).
-     * Also increments the usage counter when appropriate.
-     */
     private boolean budgetExceeded(Chunk chunk, int cost) {
         if (!enabled()) return false;
         if (!isWorldAllowed(chunk.getWorld())) return false;
@@ -108,12 +91,10 @@ public class RedstoneLimiterListener implements Listener {
     public void onRedstoneChange(BlockRedstoneEvent event) {
         Block block = event.getBlock();
         Chunk chunk = block.getChunk();
-        // Skip if no actual change
         if (event.getNewCurrent() == event.getOldCurrent()) return;
 
         boolean exceeded = budgetExceeded(chunk, COST_REDSTONE_CHANGE);
         if (exceeded) {
-            // Neutralize the redstone change by restoring old current
             event.setNewCurrent(event.getOldCurrent());
             if (debug) {
                 java.util.Map<String, String> ph = new java.util.HashMap<>();
