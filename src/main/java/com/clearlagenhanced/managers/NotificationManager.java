@@ -69,7 +69,7 @@ public class NotificationManager {
                     break;
                     
                 case "TITLE":
-                    Component titleMain = Component.text("Entity Clear Warning");
+                    Component titleMain = messageManager.getMessage("warnings.title", java.util.Collections.emptyMap(), player);
                     Title title = Title.title(
                         titleMain,
                         message,
@@ -98,7 +98,6 @@ public class NotificationManager {
             }
         }
 
-        plugin.getLogger().info("Sent entity clear warning: " + seconds + " seconds remaining");
     }
     
     private void performClear() {
@@ -116,7 +115,6 @@ public class NotificationManager {
             player.sendMessage(message);
         }
         
-        plugin.getLogger().info("Cleared " + cleared + " entities in " + duration + "ms");
     }
 
     public void cancelWarnings() {

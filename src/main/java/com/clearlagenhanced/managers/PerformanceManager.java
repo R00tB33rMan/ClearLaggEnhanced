@@ -71,8 +71,7 @@ public class PerformanceManager {
     }
 
     public void findLaggyChunksAsync(Player player) {
-        MessageUtils.sendMessage(player, Component.text("Scanning for laggy chunks...")
-                .color(NamedTextColor.GREEN));
+        MessageUtils.sendMessage(player, "chunkfinder.scanning");
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             World world = player.getWorld();
@@ -101,28 +100,30 @@ public class PerformanceManager {
 
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (laggyChunks.isEmpty()) {
-                    MessageUtils.sendMessage(player, Component.text("No laggy chunks found within " + radius + " chunks!")
-                            .color(NamedTextColor.GREEN));
+                    java.util.Map<String, String> ph = new java.util.HashMap<>();
+                    ph.put("radius", String.valueOf(radius));
+                    MessageUtils.sendMessage(player, "chunkfinder.none-found", ph);
                 } else {
-                    MessageUtils.sendMessage(player, Component.text("=== Top 10 Laggy Chunks Found ===")
-                            .color(NamedTextColor.RED));
+                    MessageUtils.sendMessage(player, "chunkfinder.header");
 
                     laggyChunks.sort((a, b) -> Integer.compare(b.entityCount, a.entityCount));
 
                     int maxResults = Math.min(laggyChunks.size(), 10);
                     for (int i = 0; i < maxResults; i++) {
                         ChunkInfo chunk = laggyChunks.get(i);
-                        NamedTextColor color = chunk.entityCount >= 100 ? NamedTextColor.RED : 
-                                             chunk.entityCount >= 75 ? NamedTextColor.GOLD : NamedTextColor.YELLOW;
 
-                        MessageUtils.sendMessage(player, Component.text("Chunk [" + chunk.x + ", " + chunk.z + "] - " + 
-                                chunk.entityCount + " entities (" + chunk.distance + " chunks away)")
-                                .color(color));
+                        java.util.Map<String, String> ph = new java.util.HashMap<>();
+                        ph.put("x", String.valueOf(chunk.x));
+                        ph.put("z", String.valueOf(chunk.z));
+                        ph.put("count", String.valueOf(chunk.entityCount));
+                        ph.put("distance", String.valueOf(chunk.distance));
+                        MessageUtils.sendMessage(player, "chunkfinder.entry", ph);
                     }
 
                     if (laggyChunks.size() > 10) {
-                        MessageUtils.sendMessage(player, Component.text("... and " + (laggyChunks.size() - 10) + " more")
-                                .color(NamedTextColor.GRAY));
+                        java.util.Map<String, String> phMore = new java.util.HashMap<>();
+                        phMore.put("more", String.valueOf(laggyChunks.size() - 10));
+                        MessageUtils.sendMessage(player, "chunkfinder.more", phMore);
                     }
                 }
             });

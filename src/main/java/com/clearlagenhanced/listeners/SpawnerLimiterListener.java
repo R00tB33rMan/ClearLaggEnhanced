@@ -23,20 +23,28 @@ public class SpawnerLimiterListener implements Listener {
     private final ConfigManager config;
     private final Set<String> worldFilter = new HashSet<>();
 
+    // Cached config values
+    private final boolean enabled;
+    private final double multiplier;
+    private final boolean debug;
+
     public SpawnerLimiterListener(ClearLaggEnhanced plugin) {
         this.plugin = plugin;
         this.config = plugin.getConfigManager();
         for (String w : config.getStringList("lag-prevention.spawner-limiter.worlds")) {
             worldFilter.add(w);
         }
+        this.enabled = config.getBoolean("lag-prevention.spawner-limiter.enabled", true);
+        this.multiplier = Math.max(1.0, config.getDouble("lag-prevention.spawner-limiter.spawn-delay-multiplier", 1.5));
+        this.debug = config.getBoolean("debug", false);
     }
 
     private boolean enabled() {
-        return config.getBoolean("lag-prevention.spawner-limiter.enabled", true);
+        return enabled;
     }
 
     private double multiplier() {
-        return Math.max(1.0, config.getDouble("lag-prevention.spawner-limiter.spawn-delay-multiplier", 1.5));
+        return multiplier;
     }
 
     private boolean isWorldAllowed(World world) {
@@ -54,8 +62,14 @@ public class SpawnerLimiterListener implements Listener {
         Chunk chunk = event.getLocation().getChunk();
         if (plugin.getLagPreventionManager().isMobLimitReached(chunk)) {
             event.setCancelled(true);
-            if (config.getBoolean("debug", false)) {
-                plugin.getLogger().info("[SpawnerLimiter] Cancelled spawn due to mob cap at chunk " + chunk.getX() + "," + chunk.getZ());
+            if (debug) {
+                java.util.Map<String, String> ph = new java.util.HashMap<>();
+                ph.put("x", String.valueOf(chunk.getX()));
+                ph.put("z", String.valueOf(chunk.getZ()));
+                var comp = plugin.getMessageManager().getMessage("debug.spawner-limiter.cancelled", ph);
+                plugin.getServer().getOnlinePlayers().stream()
+                        .filter(p -> p.hasPermission("CLE.admin"))
+                        .forEach(p -> p.sendMessage(comp));
             }
             return;
         }
@@ -66,14 +80,32 @@ public class SpawnerLimiterListener implements Listener {
             int newDelay = (int) Math.min((long) (current * multiplier()), 32767L);
             spawner.setDelay(newDelay);
 
-            if (config.getBoolean("debug", false)) {
-                plugin.getLogger().info("[SpawnerLimiter] Set next spawner delay to " + newDelay +
-                        " at " + spawner.getWorld().getName() + " " + spawner.getX() + "," + spawner.getY() + "," + spawner.getZ());
+            if (debug) {
+                java.util.Map<String, String> ph = new java.util.HashMap<>();
+                ph.put("delay", String.valueOf(newDelay));
+                ph.put("world", spawner.getWorld().getName());
+                ph.put("x", String.valueOf(spawner.getX()));
+                ph.put("y", String.valueOf(spawner.getY()));
+                ph.put("z", String.valueOf(spawner.getZ()));
+                var comp = plugin.getMessageManager().getMessage("debug.spawner-limiter.set-delay", ph);
+                plugin.getServer().getOnlinePlayers().stream()
+                        .filter(p -> p.hasPermission("CLE.admin"))
+                        .forEach(p -> p.sendMessage(comp));
             }
         } catch (Throwable t) {
-            if (config.getBoolean("debug", false)) {
-                plugin.getLogger().warning("[SpawnerLimiter] Failed to adjust spawner delay: " + t.getMessage());
+            if (debug) {
+                java.util.Map<String, String> ph = new java.util.HashMap<>();
+                ph.put("error", String.valueOf(t.getMessage()));
+                var comp = plugin.getMessageManager().getMessage("debug.spawner-limiter.error", ph);
+                plugin.getServer().getOnlinePlayers().stream()
+                        .filter(p -> p.hasPermission("CLE.admin"))
+                        .forEach(p -> p.sendMessage(comp));
             }
         }
+    }
+    private void debugAdmins(String message) {
+        plugin.getServer().getOnlinePlayers().stream()
+                .filter(p -> p.hasPermission("CLE.admin"))
+                .forEach(p -> p.sendMessage(message));
     }
 }

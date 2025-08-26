@@ -125,6 +125,30 @@ lag-prevention:
     max-spawners-per-chunk: 10
 ```
 
+#### Misc Entity Limiter: Protect named/tagged entities
+This limiter trims non-mob entities per chunk (e.g., armor stands, item frames, boats). You can exempt entities by name or by scoreboard tag under:
+
+lag-prevention.misc-entity-limiter.protect
+
+- named: true — Entities with a custom name won’t be trimmed.
+- tags — Any entity with one of these tags is protected (example uses CLE_PROTECTED).
+
+Example:
+```yml
+lag-prevention:
+  misc-entity-limiter:
+    protect:
+      named: true
+      tags:
+        - "CLE_PROTECTED"
+```
+
+Add a tag in-game:
+- Command: /tag <selector> add CLE_PROTECTED
+  - Example: /tag @e[type=armor_stand,limit=1,sort=nearest] add CLE_PROTECTED
+
+Note: These protections apply only to the misc-entity-limiter (not the global entity-clearing section).
+
 #### Performance Monitoring
 ```yaml
 monitoring:

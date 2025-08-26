@@ -1,5 +1,8 @@
 # ClearLaggEnhanced Configuration
-# Plugin Version: 1.0
+# Plugin Version: 1.3
+
+# Debug mode
+debug: false
 
 # Entity Clearing Configuration
 entity-clearing:
@@ -47,7 +50,6 @@ entity-clearing:
 
 # Lag Prevention Modules
 lag-prevention:
-  
   # Mob Limiter
   mob-limiter:
     enabled: true
@@ -67,6 +69,36 @@ lag-prevention:
   spawner-limiter:
     enabled: true
     spawn-delay-multiplier: 1.5
+  
+  # Misc (non-mob) entity limiter
+  misc-entity-limiter:
+    enabled: true
+
+    # Entities to manage and their per-chunk caps (-1 or missing = unlimited)
+    limits-per-chunk:
+      ARMOR_STAND: 5
+      BOAT: 5
+      CHEST_BOAT: 5
+      MINECART: 5
+      ITEM_FRAME: 5
+      GLOW_ITEM_FRAME: 5
+      PAINTING: 5
+
+    protect:
+      named: true
+      tags:
+        - "CLE_PROTECTED"
+
+    sweep:
+      interval-ticks: 100
+      max-chunks-per-tick: 20
+
+    notify:
+      admins-permission: "CLE.admin"
+      throttle-seconds: 60
+
+    # Worlds allowlist (empty = all worlds)
+    worlds: []
 
 # Chunk Finder Configuration
 chunk-finder:
@@ -105,6 +137,3 @@ database:
     username: "root"
     password: "password"
     ssl: false
-
-# Debug mode
-debug: false

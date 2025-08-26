@@ -2,8 +2,6 @@ package com.clearlagenhanced.commands;
 
 import com.clearlagenhanced.ClearLaggEnhanced;
 import com.clearlagenhanced.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,7 +10,9 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LaggCommand implements CommandExecutor, TabCompleter {
     
@@ -33,8 +33,7 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
         switch (subCommand) {
             case "help":
                 if (!sender.hasPermission("CLE.help")) {
-                    MessageUtils.sendMessage(sender, Component.text("You don't have permission to use this command!")
-                            .color(NamedTextColor.RED));
+                    MessageUtils.sendMessage(sender, "notifications.no-permission");
                     return true;
                 }
                 showHelp(sender);
@@ -42,8 +41,7 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
                 
             case "clear":
                 if (!sender.hasPermission("CLE.clear")) {
-                    MessageUtils.sendMessage(sender, Component.text("You don't have permission to use this command!")
-                            .color(NamedTextColor.RED));
+                    MessageUtils.sendMessage(sender, "notifications.no-permission");
                     return true;
                 }
                 handleClear(sender, args);
@@ -51,8 +49,7 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
                 
             case "next":
                 if (!sender.hasPermission("CLE.next")) {
-                    MessageUtils.sendMessage(sender, Component.text("You don't have permission to use this command!")
-                            .color(NamedTextColor.RED));
+                    MessageUtils.sendMessage(sender, "notifications.no-permission");
                     return true;
                 }
                 handleNext(sender);
@@ -60,8 +57,7 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
                 
             case "tps":
                 if (!sender.hasPermission("CLE.tps")) {
-                    MessageUtils.sendMessage(sender, Component.text("You don't have permission to use this command!")
-                            .color(NamedTextColor.RED));
+                    MessageUtils.sendMessage(sender, "notifications.no-permission");
                     return true;
                 }
                 handleTps(sender);
@@ -69,8 +65,7 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
                 
             case "ram":
                 if (!sender.hasPermission("CLE.ram")) {
-                    MessageUtils.sendMessage(sender, Component.text("You don't have permission to use this command!")
-                            .color(NamedTextColor.RED));
+                    MessageUtils.sendMessage(sender, "notifications.no-permission");
                     return true;
                 }
                 handleRam(sender);
@@ -78,8 +73,7 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
                 
             case "chunkfinder":
                 if (!sender.hasPermission("CLE.chunkfinder")) {
-                    MessageUtils.sendMessage(sender, Component.text("You don't have permission to use this command!")
-                            .color(NamedTextColor.RED));
+                    MessageUtils.sendMessage(sender, "notifications.no-permission");
                     return true;
                 }
                 handleChunkFinder(sender);
@@ -87,8 +81,7 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
                 
             case "admin":
                 if (!sender.hasPermission("CLE.admin")) {
-                    MessageUtils.sendMessage(sender, Component.text("You don't have permission to use this command!")
-                            .color(NamedTextColor.RED));
+                    MessageUtils.sendMessage(sender, "notifications.no-permission");
                     return true;
                 }
                 handleAdmin(sender);
@@ -96,16 +89,16 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
                 
             case "reload":
                 if (!sender.hasPermission("CLE.reload")) {
-                    MessageUtils.sendMessage(sender, Component.text("You don't have permission to use this command!")
-                            .color(NamedTextColor.RED));
+                    MessageUtils.sendMessage(sender, "notifications.no-permission");
                     return true;
                 }
                 handleReload(sender);
                 break;
                 
             default:
-                MessageUtils.sendMessage(sender, Component.text("Unknown subcommand: " + subCommand)
-                        .color(NamedTextColor.RED));
+                Map<String, String> ph = new HashMap<>();
+                ph.put("sub", subCommand);
+                MessageUtils.sendMessage(sender, "commands.unknown-subcommand", ph);
                 showHelp(sender);
                 break;
         }
@@ -114,37 +107,28 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
     }
     
     private void showHelp(CommandSender sender) {
-        MessageUtils.sendMessage(sender, Component.text("=== ClearLaggEnhanced Help ===")
-                .color(NamedTextColor.GOLD));
-        MessageUtils.sendMessage(sender, Component.text("/lagg help - Show this help message")
-                .color(NamedTextColor.YELLOW));
-        MessageUtils.sendMessage(sender, Component.text("/lagg clear - Clear entities manually")
-                .color(NamedTextColor.YELLOW));
-        MessageUtils.sendMessage(sender, Component.text("/lagg next - Show time until next clear")
-                .color(NamedTextColor.YELLOW));
-        MessageUtils.sendMessage(sender, Component.text("/lagg tps - Show server TPS")
-                .color(NamedTextColor.YELLOW));
-        MessageUtils.sendMessage(sender, Component.text("/lagg ram - Show RAM usage")
-                .color(NamedTextColor.YELLOW));
-        MessageUtils.sendMessage(sender, Component.text("/lagg chunkfinder - Find laggy chunks")
-                .color(NamedTextColor.YELLOW));
-        MessageUtils.sendMessage(sender, Component.text("/lagg admin - Open admin GUI")
-                .color(NamedTextColor.YELLOW));
-        MessageUtils.sendMessage(sender, Component.text("/lagg reload - Reload configuration")
-                .color(NamedTextColor.YELLOW));
+        MessageUtils.sendMessage(sender, "commands.help.header");
+        MessageUtils.sendMessage(sender, "commands.help.clear");
+        MessageUtils.sendMessage(sender, "commands.help.next");
+        MessageUtils.sendMessage(sender, "commands.help.tps");
+        MessageUtils.sendMessage(sender, "commands.help.ram");
+        MessageUtils.sendMessage(sender, "commands.help.chunkfinder");
+        MessageUtils.sendMessage(sender, "commands.help.admin");
+        MessageUtils.sendMessage(sender, "commands.help.reload");
     }
     
     private void handleClear(CommandSender sender, String[] args) {
-        MessageUtils.sendMessage(sender, Component.text("Clearing entities...")
-                .color(NamedTextColor.GREEN));
+        MessageUtils.sendMessage(sender, "commands.clear.starting");
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             long startTime = System.currentTimeMillis();
             int cleared = plugin.getEntityManager().clearEntities();
             long duration = System.currentTimeMillis() - startTime;
 
-            MessageUtils.sendMessage(sender, Component.text("Cleared " + cleared + " entities in " + duration + "ms")
-                    .color(NamedTextColor.GREEN));
+            Map<String, String> ph = new HashMap<>();
+            ph.put("count", String.valueOf(cleared));
+            ph.put("time", String.valueOf(duration));
+            MessageUtils.sendMessage(sender, "notifications.clear-complete", ph);
         });
     }
     
@@ -152,26 +136,24 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
         long timeUntilNext = plugin.getEntityManager().getTimeUntilNextClear();
         
         if (timeUntilNext == -1) {
-            MessageUtils.sendMessage(sender, Component.text("Automatic entity clearing is disabled")
-                    .color(NamedTextColor.YELLOW));
+            MessageUtils.sendMessage(sender, "next-clear.disabled");
             return;
         }
         
         String formattedTime = plugin.getEntityManager().getFormattedTimeUntilNextClear();
-        MessageUtils.sendMessage(sender, Component.text("Next automatic clear in: " + formattedTime)
-                .color(NamedTextColor.GREEN));
+        Map<String, String> ph = new HashMap<>();
+        ph.put("time", formattedTime);
+        MessageUtils.sendMessage(sender, "next-clear.scheduled", ph);
     }
     
     private void handleTps(CommandSender sender) {
         double tps = plugin.getPerformanceManager().getTPS();
-        NamedTextColor tpsColor = tps >= 18.0 ? NamedTextColor.GREEN : tps >= 15.0 ? NamedTextColor.YELLOW : NamedTextColor.RED;
-        
-        MessageUtils.sendMessage(sender, Component.text("Current TPS: " + String.format("%.2f", tps))
-                .color(tpsColor));
+        Map<String, String> ph = new HashMap<>();
+        ph.put("tps", String.format("%.2f", tps));
+        MessageUtils.sendMessage(sender, "performance.tps", ph);
     }
     
     private void handleRam(CommandSender sender) {
-        String memoryUsage = plugin.getPerformanceManager().getFormattedMemoryUsage();
         double memoryPercent = plugin.getPerformanceManager().getMemoryUsagePercentage();
         
         Runtime runtime = Runtime.getRuntime();
@@ -180,22 +162,22 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
         long freeMemory = runtime.freeMemory() / 1024 / 1024;
         long usedMemory = totalMemory - freeMemory;
         
-        NamedTextColor memoryColor = memoryPercent < 70.0 ? NamedTextColor.GREEN : memoryPercent < 85.0 ? NamedTextColor.YELLOW : NamedTextColor.RED;
-        
-        MessageUtils.sendMessage(sender, Component.text("=== RAM Usage ===")
-                .color(NamedTextColor.GOLD));
-        MessageUtils.sendMessage(sender, Component.text("Used: " + usedMemory + " MB (" + String.format("%.1f", memoryPercent) + "%)")
-                .color(memoryColor));
-        MessageUtils.sendMessage(sender, Component.text("Total: " + totalMemory + " MB")
-                .color(NamedTextColor.YELLOW));
-        MessageUtils.sendMessage(sender, Component.text("Max: " + maxMemory + " MB")
-                .color(NamedTextColor.YELLOW));
+        MessageUtils.sendMessage(sender, "performance.ram.header");
+        Map<String, String> usedPh = new HashMap<>();
+        usedPh.put("used", String.valueOf(usedMemory));
+        usedPh.put("percent", String.format("%.1f", memoryPercent));
+        MessageUtils.sendMessage(sender, "performance.ram.used", usedPh);
+        Map<String, String> totalPh = new HashMap<>();
+        totalPh.put("total", String.valueOf(totalMemory));
+        MessageUtils.sendMessage(sender, "performance.ram.total", totalPh);
+        Map<String, String> maxPh = new HashMap<>();
+        maxPh.put("max", String.valueOf(maxMemory));
+        MessageUtils.sendMessage(sender, "performance.ram.max", maxPh);
     }
     
     private void handleChunkFinder(CommandSender sender) {
         if (!(sender instanceof Player)) {
-            MessageUtils.sendMessage(sender, Component.text("This command can only be used by players!")
-                    .color(NamedTextColor.RED));
+            MessageUtils.sendMessage(sender, "errors.player-only");
             return;
         }
         
@@ -205,8 +187,7 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
     
     private void handleAdmin(CommandSender sender) {
         if (!(sender instanceof Player)) {
-            MessageUtils.sendMessage(sender, Component.text("This command can only be used by players!")
-                    .color(NamedTextColor.RED));
+            MessageUtils.sendMessage(sender, "errors.player-only");
             return;
         }
         
@@ -216,8 +197,7 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
     
     private void handleReload(CommandSender sender) {
         plugin.getConfigManager().reload();
-        MessageUtils.sendMessage(sender, Component.text("Configuration reloaded successfully!")
-                .color(NamedTextColor.GREEN));
+        MessageUtils.sendMessage(sender, "notifications.reload-complete");
     }
     
     @Override

@@ -1,8 +1,9 @@
 # ClearLaggEnhanced Messages
-# Version: 1.0
+# Version: 1.3
 
 warnings:
   entity-clear: "<yellow>⚠ Entities will be cleared in <red>{seconds}</red> seconds!"
+  title: "<gold>Entity Clear Warning</gold>"
 
 notifications:
   clear-complete: "<green>✓ Cleared <yellow>{count}</yellow> entities in <gray>{time}ms</gray>!"
@@ -16,15 +17,67 @@ commands:
     next: "<yellow>/lagg next - Time until next clear"
     tps: "<yellow>/lagg tps - Show server TPS"
     ram: "<yellow>/lagg ram - Show memory usage"
+    chunkfinder: "<yellow>/lagg chunkfinder - Find laggy chunks"
     admin: "<yellow>/lagg admin - Open admin GUI"
     reload: "<yellow>/lagg reload - Reload configuration"
+  unknown-subcommand: "<red>Unknown subcommand: <yellow>{sub}</yellow>"
+  clear:
+    starting: "<green>Clearing entities...</green>"
+
+errors:
+  player-only: "<red>This command can only be used by players!"
+  message-manager-not-initialized: "<red>MessageManager not initialized!" # optional
 
 performance:
-  tps: "<green>Current TPS: <yellow>{tps}"
-  memory: "<green>Memory Usage: <yellow>{usage} <gray>({percentage}%)"
-  entities: "<green>Total Entities: <yellow>{count}"
+  tps: "<green>Current TPS: <yellow>{tps}</yellow>"
+  memory: "<green>Memory Usage: <yellow>{usage}</yellow> <gray>({percentage}%)</gray>"
+  ram:
+    header: "<gold>=== RAM Usage ==="
+    used: "<green>Used: <yellow>{used}</yellow> MB (<yellow>{percent}</yellow>%)"
+    total: "<yellow>Total: {total} MB"
+    max: "<yellow>Max: {max} MB"
+  entities: "<green>Total Entities: <yellow>{count}</yellow>"
 
 next-clear:
   disabled: "<yellow>⚠ Automatic entity clearing is disabled"
   imminent: "<green>⏰ Next clear: Any moment now!"
-  scheduled: "<color>⏰ Next automatic clear in: <yellow>{time}</yellow>"
+  scheduled: "<green>⏰ Next automatic clear in: <yellow>{time}</yellow>"
+
+chunkfinder:
+  scanning: "<green>Scanning for laggy chunks...</green>"
+  none-found: "<green>No laggy chunks found within <yellow>{radius}</yellow> chunks!</green>"
+  header: "<red>=== Top 10 Laggy Chunks Found ==="
+  entry: "<yellow>Chunk [<white>{x}</white>, <white>{z}</white>] - <gold>{count}</gold> entities (<gray>{distance}</gray> chunks away)</yellow>"
+  more: "<gray>... and <yellow>{more}</yellow> more</gray>"
+
+misc-entity-limiter:
+  blocked: "<red>[MiscEntityLimiter]</red> <gray>Blocked</gray> <yellow>{type}</yellow> <gray>in chunk</gray> <white>{x},{z}</white>"
+  trimmed: "<gold>[MiscEntityLimiter]</gold> <gray>Trimmed</gray> <yellow>{removed}</yellow> <yellow>{type}</yellow> <gray>in chunk</gray> <white>{x},{z}</white>"
+
+debug:
+  mob-limiter:
+    cancelled: "<gray>[MobLimiter]</gray> Cancelled <yellow>{type}</yellow> spawn in chunk <white>{x},{z}</white> <gray>(limit reached)</gray>"
+  spawner-limiter:
+    cancelled: "<gray>[SpawnerLimiter]</gray> Cancelled spawn due to mob cap at chunk <white>{x},{z}</white>"
+    set-delay: "<gray>[SpawnerLimiter]</gray> Set next spawner delay to <yellow>{delay}</yellow> at <white>{world} {x},{y},{z}</white>"
+    error: "<gray>[SpawnerLimiter]</gray> Failed to adjust spawner delay: <red>{error}</red>"
+  redstone:
+    neutralized: "<gray>[RedstoneLimiter]</gray> Neutralized redstone change at <white>{world} {x},{y},{z}</white> (chunk <white>{cx},{cz}</white>)"
+    piston-extend: "<gray>[RedstoneLimiter]</gray> Cancelled piston extend at <white>{world} {x},{y},{z}</white> (chunk <white>{cx},{cz}</white>)"
+    piston-retract: "<gray>[RedstoneLimiter]</gray> Cancelled piston retract at <white>{world} {x},{y},{z}</white> (chunk <white>{cx},{cz}</white>)"
+    dispense: "<gray>[RedstoneLimiter]</gray> Cancelled dispense at <white>{world} {x},{y},{z}</white> (chunk <white>{cx},{cz}</white>)"
+  hopper:
+    throttling: "<gray>[HopperLimiter]</gray> Throttling moves in chunk <white>{x},{z}</white>"
+
+gui:
+  reload-complete: "<green>Configuration reloaded successfully!</green>"
+  enter-interval: "<yellow>Enter new clearing interval in seconds:</yellow>"
+  type-cancel: "<gray>Type 'cancel' to cancel.</gray>"
+  input-cancelled: "<gray>Input cancelled.</gray>"
+  interval-min: "<red>Interval must be at least <yellow>{min}</yellow> seconds!</red>"
+  interval-set: "<green>Entity clearing interval set to <yellow>{interval}</yellow> seconds!</green>"
+  invalid-number: "<red>Invalid number! Please enter a valid integer.</red>"
+
+update-notifier:
+  - "<yellow>Update available!</yellow> <gray>(Current: </gray><red><current_version></red><gray>, New: </gray><green><new_version></green><gray>)</gray>"
+  - "<aqua><u>Click to open Modrinth page</u></aqua>"

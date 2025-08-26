@@ -17,6 +17,7 @@ public class ClearLaggEnhanced extends JavaPlugin {
     private PerformanceManager performanceManager;
     private NotificationManager notificationManager;
     private GUIManager guiManager;
+    private com.clearlagenhanced.managers.MiscEntitySweepService miscSweep;
 
     @Override
     public void onEnable() {
@@ -34,6 +35,18 @@ public class ClearLaggEnhanced extends JavaPlugin {
                 new com.clearlagenhanced.listeners.HopperLimiterListener(this), this);
         getServer().getPluginManager().registerEvents(
                 new com.clearlagenhanced.listeners.SpawnerLimiterListener(this), this);
+        // Register update notifier
+        getServer().getPluginManager().registerEvents(
+                new com.clearlagenhanced.utils.VersionCheck(this), this);
+
+        // Misc entity limiter (non-mobs): start sweeper and register proactive listener if enabled in config
+        boolean miscEnabled = getConfigManager().getBoolean("lag-prevention.misc-entity-limiter.enabled", true);
+        if (miscEnabled) {
+            miscSweep = new com.clearlagenhanced.managers.MiscEntitySweepService(this, getConfigManager());
+            miscSweep.start();
+            getServer().getPluginManager().registerEvents(
+                    new com.clearlagenhanced.listeners.MiscEntityLimiterListener(this, miscSweep), this);
+        }
         
         getLogger().info("ClearLaggEnhanced has been enabled!");
     }
@@ -50,6 +63,10 @@ public class ClearLaggEnhanced extends JavaPlugin {
         
         if (guiManager != null) {
             guiManager.shutdown();
+        }
+
+        if (miscSweep != null) {
+            miscSweep.shutdown();
         }
         
         getLogger().info("ClearLaggEnhanced has been disabled!");
