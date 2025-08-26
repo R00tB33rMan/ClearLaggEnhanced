@@ -196,7 +196,7 @@ public class LaggCommand implements CommandExecutor, TabCompleter {
     }
     
     private void handleReload(CommandSender sender) {
-        plugin.getConfigManager().reload();
+        plugin.reloadAll();
         MessageUtils.sendMessage(sender, "notifications.reload-complete");
     }
     

@@ -4,6 +4,7 @@ import com.clearlagenhanced.commands.LaggCommand;
 import com.clearlagenhanced.database.DatabaseManager;
 import com.clearlagenhanced.managers.*;
 import com.clearlagenhanced.utils.MessageUtils;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ClearLaggEnhanced extends JavaPlugin {
@@ -83,13 +84,78 @@ public class ClearLaggEnhanced extends JavaPlugin {
         guiManager = new GUIManager(this);
         
         MessageUtils.initialize(messageManager);
-
+        
         getLogger().info("All managers initialized successfully!");
     }
     
     private void registerCommands() {
         getCommand("lagg").setExecutor(new LaggCommand(this));
         getCommand("lagg").setTabCompleter(new LaggCommand(this));
+    }
+
+    public void reloadAll() {
+        // 1) Unregister all existing listeners for this plugin
+        HandlerList.unregisterAll(this);
+
+        // 2) Stop/cleanup services and tasks
+        if (entityManager != null) {
+            entityManager.shutdown();
+        }
+        if (guiManager != null) {
+            guiManager.shutdown();
+        }
+        if (miscSweep != null) {
+            miscSweep.shutdown();
+            miscSweep = null;
+        }
+
+        // 3) Reload configs/messages
+        if (configManager != null) {
+            configManager.reload();
+        }
+        if (messageManager != null) {
+            messageManager.reload();
+        }
+        // Rebind MessageUtils to make sure it uses the current manager
+        MessageUtils.initialize(messageManager);
+
+        // 4) Recreate managers that cache config in fields (fresh instances)
+        entityManager = new EntityManager(this); // picks up new config & restarts task
+        lagPreventionManager = new LagPreventionManager(this);
+        performanceManager = new PerformanceManager(this);
+        notificationManager = new NotificationManager(this);
+        guiManager = new GUIManager(this);
+
+        // 5) Re-register listeners (fresh instances so constructor reads new config)
+        getServer().getPluginManager().registerEvents(
+                new com.clearlagenhanced.listeners.MobLimiterListener(this), this);
+        getServer().getPluginManager().registerEvents(
+                new com.clearlagenhanced.listeners.RedstoneLimiterListener(this), this);
+
+        com.clearlagenhanced.listeners.HopperLimiterListener hopperListener =
+                new com.clearlagenhanced.listeners.HopperLimiterListener(this);
+        getServer().getPluginManager().registerEvents(hopperListener, this);
+        try {
+            hopperListener.rescanLoadedChunks();
+        } catch (NoSuchMethodError | Exception ignored) {
+            // If method not present, lazy scanning will handle it
+        }
+
+        getServer().getPluginManager().registerEvents(
+                new com.clearlagenhanced.listeners.SpawnerLimiterListener(this), this);
+
+        // 6) Recreate and register misc entity limiter listener based on config
+        boolean miscEnabled = getConfigManager().getBoolean("lag-prevention.misc-entity-limiter.enabled", true);
+        if (miscEnabled) {
+            miscSweep = new com.clearlagenhanced.managers.MiscEntitySweepService(this, getConfigManager());
+            miscSweep.start();
+            getServer().getPluginManager().registerEvents(
+                    new com.clearlagenhanced.listeners.MiscEntityLimiterListener(this, miscSweep), this);
+        }
+
+        // 7) Re-register update notifier
+        getServer().getPluginManager().registerEvents(
+                new com.clearlagenhanced.utils.VersionCheck(this), this);
     }
     
     public static ClearLaggEnhanced getInstance() {

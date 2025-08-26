@@ -182,6 +182,17 @@ public class HopperLimiterListener implements Listener {
         });
     }
 
+    public void rescanLoadedChunks() {
+        for (org.bukkit.World w : plugin.getServer().getWorlds()) {
+            for (org.bukkit.Chunk c : w.getLoadedChunks()) {
+                String key = chunkKey(c);
+                hopperCountByChunk.put(key, scanHoppersInChunk(c));
+                lastMoveTickByChunk.remove(key);
+                lastLogTickByChunk.remove(key);
+            }
+        }
+    }
+
     private void maybeLogChunkThrottle(Chunk chunk, long nowTick) {
         if (!debug) return;
         String key = chunkKey(chunk);
