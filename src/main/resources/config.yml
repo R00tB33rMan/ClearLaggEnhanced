@@ -46,7 +46,7 @@ entity-clearing:
     - "ITEM_FRAME"
     - "PAINTING"
     - "MINECART"
-    - "BOAT"
+    - "OAK_BOAT"
 
 # Lag Prevention Modules
 lag-prevention:
