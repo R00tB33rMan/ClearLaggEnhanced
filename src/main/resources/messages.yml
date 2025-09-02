@@ -1,6 +1,9 @@
 # ClearLaggEnhanced Messages
 # Version: 1.3
 
+# Global chat prefix used for messages sent by the plugin
+prefix: "<gray>[</gray><gold>ClearLaggEnhanced</gold><gray>]</gray>"
+
 warnings:
   entity-clear: "<yellow>⚠ Entities will be cleared in <red>{seconds}</red> seconds!"
   title: "<gold>Entity Clear Warning</gold>"
@@ -79,5 +82,6 @@ gui:
   invalid-number: "<red>Invalid number! Please enter a valid integer.</red>"
 
 update-notifier:
+  - ""
   - "<yellow>Update available!</yellow> <gray>(Current: </gray><red><current_version></red><gray>, New: </gray><green><new_version></green><gray>)</gray>"
   - "<aqua><u>Click to open Modrinth page</u></aqua>"

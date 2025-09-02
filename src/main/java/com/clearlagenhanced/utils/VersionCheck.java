@@ -42,7 +42,6 @@ public final class VersionCheck implements Listener {
                 try (InputStreamReader reader = new InputStreamReader(url.openStream())) {
                     JsonArray versionList = JsonParser.parseReader(reader).getAsJsonArray();
                     if (versionList != null && versionList.size() > 0) {
-                        // Choose the element with the max date_published string (ISO-8601)
                         JsonObject selected = null;
                         String maxDate = null;
                         for (JsonElement el : versionList) {
@@ -78,19 +77,22 @@ public final class VersionCheck implements Listener {
 
         String currentVersion = plugin.getDescription().getVersion();
         if (isNewerVersion(latestVersion, currentVersion)) {
-            // Read a list of lines from messages.yml at key: update-notifier
             List<String> lines = plugin.getMessageManager().getConfig().getStringList("update-notifier");
+            String prefix = plugin.getMessageManager().getConfig().getString("prefix", "<gray>[</gray><gold>ClearLaggEnhanced</gold><gray>]</gray>");
             MiniMessage mm = MiniMessage.miniMessage();
 
             if (lines == null || lines.isEmpty()) {
-                // Fallback inline message if not configured
                 Component fallback = mm.deserialize(
-                        "<yellow>Update available!</yellow> <gray>(Current: </gray><red><current></red><gray>, New: </gray><green><latest></green><gray>)</gray> <aqua><u>Click to open</u></aqua>",
+                        prefix + " <yellow>Update available!</yellow> <gray>(Current: </gray><red><current></red><gray>, New: </gray><green><latest></green><gray>)</gray> <aqua><u>Click to open</u></aqua>",
                         Placeholder.unparsed("current", currentVersion),
                         Placeholder.unparsed("latest", latestVersion)
                 ).clickEvent(ClickEvent.openUrl(MODRINTH_PROJECT_URL));
                 player.sendMessage(fallback);
                 return;
+            }
+
+            if (!lines.isEmpty()) {
+                lines.set(0, prefix + " " + lines.get(0));
             }
 
             for (int i = 0; i < lines.size(); i++) {
@@ -101,7 +103,6 @@ public final class VersionCheck implements Listener {
                         Placeholder.unparsed("new_version", latestVersion)
                 );
 
-                // Make the last line clickable to Modrinth
                 if (i == lines.size() - 1) {
                     component = component.clickEvent(ClickEvent.openUrl(MODRINTH_PROJECT_URL));
                 }
@@ -111,7 +112,7 @@ public final class VersionCheck implements Listener {
     }
 
     private boolean isNewerVersion(String version1, String version2) {
-        // Strip non-numeric/dot parts and compare semantic-like segments
+
         String v1 = version1.replaceAll("[^\\d.]", "");
         String v2 = version2.replaceAll("[^\\d.]", "");
 
