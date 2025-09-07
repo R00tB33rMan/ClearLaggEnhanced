@@ -12,7 +12,9 @@ entity-clearing:
   protect-tamed-entities: true
   
   # Worlds to clear entities in (empty list = all worlds)
-  worlds: []
+  worlds:
+    - "world_nether"
+    - "world_the_end"
   
   # Entities to always clear (blacklist)
   blacklist:
