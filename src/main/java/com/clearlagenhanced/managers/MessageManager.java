@@ -23,8 +23,6 @@ public class MessageManager {
     private FileConfiguration messages;
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
-
-    // Patterns for hex and legacy hex variants
     private static final Pattern PLAIN_HEX = Pattern.compile("#([A-Fa-f0-9]{6})");
     private static final Pattern AMP_HEX = Pattern.compile("&#([A-Fa-f0-9]{6})");
     private static final Pattern LEGACY_X_HEX = Pattern.compile("(?i)&x(?:&([0-9A-F])){6}");
@@ -79,50 +77,33 @@ public class MessageManager {
         if (message == null || message.isEmpty()) {
             return Component.empty();
         }
-        
-        // 1) Apply placeholders
+
         for (Map.Entry<String, String> entry : placeholders.entrySet()) {
             message = message.replace("{" + entry.getKey() + "}", entry.getValue());
         }
-        
-        // 2) PlaceholderAPI
+
         if (placeholderAPIEnabled && player != null) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
 
-        // 3) Normalize all legacy/hex forms to MiniMessage tags so mixes work
         String normalized = normalizeToMiniMessage(message);
 
-        // 4) Try MiniMessage first
         try {
             return miniMessage.deserialize(normalized);
         } catch (Exception e) {
             plugin.getLogger().warning("Failed to parse MiniMessage. Falling back to legacy. Message: " + message);
         }
 
-        // 5) Fallback: try legacy deserializer (supports & codes and §)
         return legacySerializer.deserialize(message);
     }
 
-    /**
-     * Converts a message possibly containing a mix of MiniMessage, legacy (&/§) and hex
-     * into a MiniMessage-friendly string by translating legacy tokens to MiniMessage tags.
-     */
     private String normalizeToMiniMessage(String input) {
         if (input == null || input.isEmpty()) return "";
 
         String msg = input.replace('§', '&'); // treat section as &
-
-        // Convert legacy &x hex sequences to <#RRGGBB>
         msg = convertLegacyXHex(msg);
-
-        // Convert &#RRGGBB to <#RRGGBB>
         msg = AMP_HEX.matcher(msg).replaceAll(mr -> "<#" + mr.group(1) + ">");
-
-        // Convert bare #RRGGBB (not already a tag like <#RRGGBB>) to <#RRGGBB>
         msg = msg.replaceAll("(?i)(?<!<)#([A-F0-9]{6})", "<#$1>");
-
-        // Convert legacy & codes to MiniMessage tags
         msg = convertLegacyCodesToMini(msg);
 
         return msg;
@@ -132,10 +113,9 @@ public class MessageManager {
         Matcher m = LEGACY_X_HEX.matcher(msg);
         StringBuffer sb = new StringBuffer();
         while (m.find()) {
-            // Extract the six captured hex chars from the entire match using a secondary matcher
             String full = m.group(); // e.g., &x&F&F&0&0&0&0
             StringBuilder hex = new StringBuilder(6);
-            for (int i = 3; i < full.length(); i += 2) { // skip &x, then every second char after each &
+            for (int i = 3; i < full.length(); i += 2) {
                 char ch = full.charAt(i);
                 if (isHex(ch)) hex.append(ch);
             }
