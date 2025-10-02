@@ -1,29 +1,49 @@
-# ClearLaggEnhanced Configuration
-# Plugin Version: 1.3
+###############################################################################
+#                         ClearLaggEnhanced Configuration                     #
+###############################################################################
 
-# Debug mode
+# Config version - DO NOT MODIFY (used for automatic updates)
+config-version: 1
+
+# ============================================================================ #
+#                              General Settings                                #
+# ============================================================================ #
+
+# Enable debug mode for detailed logging
 debug: false
 
-# Entity Clearing Configuration
+# ============================================================================ #
+#                           Entity Clearing System                             #
+# ============================================================================ #
+
 entity-clearing:
+  # Enable automatic entity clearing
   enabled: true
-  interval: 300  # Clear interval in seconds (5 minutes)
+  
+  # Clear interval in seconds (default: 300 = 5 minutes)
+  interval: 300
+  
+  # Protection settings
   protect-named-entities: true
   protect-tamed-entities: true
   
-  # Worlds to clear entities in (empty list = all worlds)
+  # Target worlds (empty list = all worlds)
   worlds:
     - "world_nether"
     - "world_the_end"
   
-  # Entities to always clear (blacklist)
+  # -------------------------------- Blacklist --------------------------------- #
+  # Entities that will always be cleared
   blacklist:
+    # Items & Projectiles
     - "DROPPED_ITEM"
     - "ARROW"
     - "EXPERIENCE_ORB"
     - "PRIMED_TNT"
     - "FIREWORK"
     - "AREA_EFFECT_CLOUD"
+    
+    # Hostile Mobs
     - "ZOMBIE"
     - "SKELETON"
     - "CREEPER"
@@ -38,7 +58,8 @@ entity-clearing:
     - "PIGLIN"
     - "ZOMBIFIED_PIGLIN"
   
-  # Entities to never clear (whitelist/protected)
+  # -------------------------------- Whitelist --------------------------------- #
+  # Entities that will never be cleared (protected)
   whitelist:
     - "PLAYER"
     - "VILLAGER"
@@ -50,33 +71,38 @@ entity-clearing:
     - "MINECART"
     - "OAK_BOAT"
 
-# Lag Prevention Modules
+# ============================================================================ #
+#                          Lag Prevention Modules                              #
+# ============================================================================ #
+
 lag-prevention:
-  # Mob Limiter
+  
+  # ------------------------------ Mob Limiter ------------------------------- #
   mob-limiter:
     enabled: true
     max-mobs-per-chunk: 50
-    
-  # Redstone Limiter
+  
+  # ---------------------------- Redstone Limiter ---------------------------- #
   redstone-limiter:
     enabled: true
     max-redstone-per-chunk: 100
-    
-  # Hopper Limiter
+  
+  # ----------------------------- Hopper Limiter ----------------------------- #
   hopper-limiter:
     enabled: true
-    transfer-cooldown: 8  # ticks
-    
-  # Spawner Limiter
+    transfer-cooldown: 8  # in ticks
+  
+  # ---------------------------- Spawner Limiter ----------------------------- #
   spawner-limiter:
     enabled: true
     spawn-delay-multiplier: 1.5
   
-  # Misc (non-mob) entity limiter
+  # ------------------------ Misc Entity Limiter ---------------------------- #
+  # Limits miscellaneous (non-mob) entities per chunk
   misc-entity-limiter:
     enabled: true
-
-    # Entities to manage and their per-chunk caps (-1 or missing = unlimited)
+    
+    # Per-chunk entity limits (-1 or missing = unlimited)
     limits-per-chunk:
       ARMOR_STAND: 5
       BOAT: 5
@@ -85,53 +111,78 @@ lag-prevention:
       ITEM_FRAME: 5
       GLOW_ITEM_FRAME: 5
       PAINTING: 5
-
+    
+    # Protection settings
     protect:
       named: true
       tags:
         - "CLE_PROTECTED"
-
+    
+    # Sweep configuration
     sweep:
       interval-ticks: 100
       max-chunks-per-tick: 20
-
+    
+    # Admin notifications
     notify:
       admins-permission: "CLE.admin"
       throttle-seconds: 60
-
-    # Worlds allowlist (empty = all worlds)
+    
+    # Target worlds (empty = all worlds)
     worlds: []
 
-# Chunk Finder Configuration
-chunk-finder:
-  radius: 10  # chunks around player to scan
-  entity-threshold: 50  # entities per chunk to consider "laggy"
+# ============================================================================ #
+#                              Chunk Finder Tool                               #
+# ============================================================================ #
 
-# Notification Settings
+chunk-finder:
+  # Scan radius around player in chunks
+  radius: 10
+  
+  # Entities per chunk to be considered "laggy"
+  entity-threshold: 50
+
+# ============================================================================ #
+#                           Notification Settings                              #
+# ============================================================================ #
+
 notifications:
-  # Broadcast times (seconds before clear)
+  # Warning broadcast times before clearing (in seconds)
   broadcast-times: [60, 30, 10, 5]
   
-  # Notification type: CHAT, ACTION_BAR, or TITLE
+  # Notification display type: CHAT, ACTION_BAR, or TITLE
   type: "ACTION_BAR"
   
-  # Sound settings
+  # Display console notifications when entities are cleared
+  console-notifications: false
+  
+  # Sound effects
   sound:
     enabled: true
     name: "BLOCK_NOTE_BLOCK_PLING"
     volume: 1.0
     pitch: 1.2
 
-# Performance Monitoring
+# ============================================================================ #
+#                         Performance Monitoring                               #
+# ============================================================================ #
+
 performance:
-  update-interval: 20  # ticks between updates
-  
-# Database Settings
+  # Update interval in ticks (20 ticks = 1 second)
+  update-interval: 20
+
+# ============================================================================ #
+#                            Database Settings                                 #
+# ============================================================================ #
+
 database:
-  type: "sqlite"  # sqlite or mysql
+  # Database type: sqlite or mysql
+  type: "sqlite"
+  
+  # SQLite database file name
   file: "clearlagg.db"
   
-  # MySQL settings (if using mysql)
+  # MySQL configuration (only used if type is "mysql")
   mysql:
     host: "localhost"
     port: 3306

@@ -59,7 +59,9 @@ public class EntityManager {
             if (clearTask != null) {
                 nextClearTime = System.currentTimeMillis() + (clearInterval * 1000);
             }
-            plugin.getLogger().info("Cleared " + cleared + " entities");
+            if (configManager.getBoolean("notifications.console-notifications", true)) {
+                plugin.getLogger().info("Cleared " + cleared + " entities");
+            }
             return cleared;
         } else {
             CompletableFuture<Integer> future = new CompletableFuture<>();
@@ -68,7 +70,9 @@ public class EntityManager {
                 if (clearTask != null) {
                     nextClearTime = System.currentTimeMillis() + (clearInterval * 1000);
                 }
-                plugin.getLogger().info("Cleared " + cleared + " entities");
+                if (configManager.getBoolean("notifications.console-notifications", true)) {
+                    plugin.getLogger().info("Cleared " + cleared + " entities");
+                }
                 future.complete(cleared);
             });
             return future.join();
