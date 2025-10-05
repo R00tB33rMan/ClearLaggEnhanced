@@ -148,9 +148,7 @@ gui:
 
 update-notifier:
   - ""
-  - "<gold><bold>═══════════════════════════════════════</bold></gold>"
   - "<yellow>⚠</yellow> <yellow><bold>Update Available!</bold></yellow>"
-  - "<gray>Current:</gray> <red><current_version></red> <gray>→</gray> <gray>New:</gray> <green><new_version></green>"
+  - "<gray>Current:</gray> <red><current_version></red> <gray>→ New:</gray> <green><new_version></green>"
   - "<aqua><u>» Click to open Modrinth page «</u></aqua>"
-  - "<gold><bold>═══════════════════════════════════════</bold></gold>"
   - ""
