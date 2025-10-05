@@ -250,7 +250,7 @@ For support, bug reports, or feature requests:
 
 ## Requirements
 
-- **Minecraft Version**: 1.20+
+- **Minecraft Version**: 1.20 – 1.21.9
 - **Java Version**: 17+
 - **Optional Dependencies**:
   - PlaceholderAPI (for placeholder support)
