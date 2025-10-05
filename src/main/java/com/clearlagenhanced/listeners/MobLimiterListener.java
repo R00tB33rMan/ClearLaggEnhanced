@@ -69,9 +69,7 @@ public class MobLimiterListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCreatureSpawnMonitor(CreatureSpawnEvent event) {
         final Chunk chunk = event.getEntity().getLocation().getChunk();
-        plugin.getServer().getScheduler().runTask(plugin, () -> {
-            limiter.optimizeChunk(chunk);
-        });
+        limiter.optimizeChunk(chunk);
     }
 
     private boolean isCountable(Entity entity) {

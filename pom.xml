@@ -6,7 +6,7 @@
 
     <groupId>com.clearlagenhanced</groupId>
     <artifactId>ClearLaggEnhanced</artifactId>
-    <version>1.3-Beta</version>
+    <version>1.4-Beta</version>
     <packaging>jar</packaging>
 
     <name>ClearLaggEnhanced</name>
@@ -68,6 +68,12 @@
             <version>2.10.1</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -98,6 +104,13 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.30</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             

@@ -47,3 +47,6 @@ Thumbs.db
 # Environment files
 .env
 .env.*
+
+# Documentation (local-only)
+CHANGELOG.md

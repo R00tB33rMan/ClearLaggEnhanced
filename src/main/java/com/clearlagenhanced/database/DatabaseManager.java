@@ -3,6 +3,7 @@ package com.clearlagenhanced.database;
 import com.clearlagenhanced.ClearLaggEnhanced;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -82,7 +83,7 @@ public class DatabaseManager {
         String laggyChunksTable = """
             CREATE TABLE IF NOT EXISTS laggy_chunks (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                world TEXT NOT NULL,
+                world VARCHAR(255) NOT NULL,
                 chunk_x INTEGER NOT NULL,
                 chunk_z INTEGER NOT NULL,
                 entity_count INTEGER NOT NULL,
@@ -95,6 +96,10 @@ public class DatabaseManager {
             stmt.execute(clearingHistoryTable);
             stmt.execute(performanceDataTable);
             stmt.execute(laggyChunksTable);
+
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_laggy_chunks_world ON laggy_chunks(world)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_laggy_chunks_entity_count ON laggy_chunks(entity_count DESC)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_laggy_chunks_composite ON laggy_chunks(world, chunk_x, chunk_z)");
         }
     }
 

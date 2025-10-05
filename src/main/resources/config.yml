@@ -28,48 +28,32 @@ entity-clearing:
   protect-tamed-entities: true
   
   # Target worlds (empty list = all worlds)
-  worlds:
-    - "world_nether"
-    - "world_the_end"
-  
-  # -------------------------------- Blacklist --------------------------------- #
-  # Entities that will always be cleared
-  blacklist:
-    # Items & Projectiles
-    - "DROPPED_ITEM"
-    - "ARROW"
-    - "EXPERIENCE_ORB"
-    - "PRIMED_TNT"
-    - "FIREWORK"
-    - "AREA_EFFECT_CLOUD"
-    
-    # Hostile Mobs
-    - "ZOMBIE"
-    - "SKELETON"
-    - "CREEPER"
-    - "SPIDER"
-    - "ENDERMAN"
-    - "SLIME"
-    - "MAGMA_CUBE"
-    - "WITCH"
-    - "PHANTOM"
-    - "DROWNED"
-    - "HOGLIN"
-    - "PIGLIN"
-    - "ZOMBIFIED_PIGLIN"
-  
+  worlds: []
+
   # -------------------------------- Whitelist --------------------------------- #
-  # Entities that will never be cleared (protected)
+  # Entities that will NEVER be cleared (protected)
+  # All entities NOT in this list will be cleared (except players, named, and tamed)
   whitelist:
-    - "PLAYER"
+    # Friendly Mobs
     - "VILLAGER"
     - "IRON_GOLEM"
     - "SNOW_GOLEM"
+    - "CAT"
+    - "PARROT"
+
+    # Decorative / Utility
     - "ARMOR_STAND"
     - "ITEM_FRAME"
+    - "GLOW_ITEM_FRAME"
     - "PAINTING"
+
+    # Vehicles
     - "MINECART"
-    - "OAK_BOAT"
+    - "CHEST_MINECART"
+    - "FURNACE_MINECART"
+    - "HOPPER_MINECART"
+    - "BOAT"
+    - "CHEST_BOAT"
 
 # ============================================================================ #
 #                          Lag Prevention Modules                              #

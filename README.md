@@ -8,14 +8,23 @@ Special thanks to **bob7l**, the original developer of ClearLagg, whose work ins
 
 ## Features
 
-- **Automatic Entity Clearing**: Remove dropped items, experience orbs, and other entities at configurable intervals
+### Core Features
+- **Automatic Entity Clearing**: Remove dropped items, experience orbs, and entities at configurable intervals
+- **Smart Whitelist System**: Protect only what you want - everything else gets cleared automatically
 - **Lag Prevention Modules**: Mob limiter, redstone limiter, hopper optimization, and spawner control
-- **Performance Monitoring**: Real-time TPS and memory usage tracking
-- **Smart Protection**: Protect named entities, tamed animals, and player-important items
-- **Customizable Notifications**: Warning system before entity clearing
-- **Admin GUI**: Easy-to-use graphical interface for server management
+- **Performance Monitoring**: Real-time TPS and memory usage tracking with color-coded indicators
+- **Smart Protection**: Protect named entities, tamed animals, and whitelisted entities
+- **Customizable Notifications**: Warning system before entity clearing with multiple display options
+- **Interactive Admin GUI**: Easy-to-use graphical interface with real-time performance updates
 - **PlaceholderAPI Support**: Use plugin data in other plugins
-- **Database Integration**: SQLite database for data persistence
+- **Optimized Database**: SQLite with HikariCP pooling and strategic indexes for 10-100x faster queries
+
+### What's New in v1.4
+- 🔄 **Auto-Update System**: Configs automatically update while preserving your customizations
+- 🎨 **Professional Messages**: Complete overhaul with consistent colors, icons, and formatting
+- ⚡ **Performance Optimizations**: Database indexes and main thread optimizations
+- 🧹 **Simplified Entity Clearing**: Removed confusing blacklist - now just whitelist what to protect!
+- 📊 **Enhanced Database**: VARCHAR optimization and strategic indexes for faster queries
 
 ## Installation
 
@@ -28,41 +37,41 @@ Special thanks to **bob7l**, the original developer of ClearLagg, whose work ins
 
 All commands use the base command `/lagg` with the following aliases: `/clearlagg`, `/cl`, `/cle`
 
-| Command | Description | Permission | Default |
-|---------|-------------|------------|---------|
-| `/lagg help` | Show help menu | `CLE.help` | All players |
-| `/lagg clear` | Manually clear entities now | `CLE.clear` | OP only |
-| `/lagg next` | Show time until next automatic clear | `CLE.next` | All players |
-| `/lagg tps` | Display current server TPS | `CLE.tps` | OP only |
-| `/lagg ram` | Show memory usage information | `CLE.ram` | OP only |
-| `/lagg admin` | Open the admin GUI (players only) | `CLE.admin` | OP only |
-| `/lagg reload` | Reload plugin configuration | `CLE.reload` | OP only |
+| Command        | Description                          | Permission   | Default     |
+|----------------|--------------------------------------|--------------|-------------|
+| `/lagg help`   | Show help menu                       | `CLE.help`   | All players |
+| `/lagg clear`  | Manually clear entities now          | `CLE.clear`  | OP only     |
+| `/lagg next`   | Show time until next automatic clear | `CLE.next`   | All players |
+| `/lagg tps`    | Display current server TPS           | `CLE.tps`    | OP only     |
+| `/lagg ram`    | Show memory usage information        | `CLE.ram`    | OP only     |
+| `/lagg admin`  | Open the admin GUI (players only)    | `CLE.admin`  | OP only     |
+| `/lagg reload` | Reload plugin configuration          | `CLE.reload` | OP only     |
 
 ## Permissions
 
-| Permission | Description | Default |
-|------------|-------------|---------|
-| `CLE.*` | All ClearLaggEnhanced permissions | OP |
-| `CLE.help` | Access to help command | True |
-| `CLE.clear` | Access to manual clearing | OP |
-| `CLE.next` | Access to next clear timer | True |
-| `CLE.tps` | Access to TPS command | OP |
-| `CLE.ram` | Access to memory command | OP |
-| `CLE.admin` | Access to admin GUI | OP |
-| `CLE.reload` | Access to reload command | OP |
+| Permission   | Description                       | Default  |
+|--------------|-----------------------------------|----------|
+| `CLE.*`      | All ClearLaggEnhanced permissions | OP       |
+| `CLE.help`   | Access to help command            | True     |
+| `CLE.clear`  | Access to manual clearing         | OP       |
+| `CLE.next`   | Access to next clear timer        | True     |
+| `CLE.tps`    | Access to TPS command             | OP       |
+| `CLE.ram`    | Access to memory command          | OP       |
+| `CLE.admin`  | Access to admin GUI               | OP       |
+| `CLE.reload` | Access to reload command          | OP       |
 
 ## PlaceholderAPI Placeholders
 
 If PlaceholderAPI is installed, you can use these placeholders in other plugins:
 
-| Placeholder | Description | Example Output |
-|-------------|-------------|----------------|
-| `%clearlagenhanced_tps%` | Current server TPS | `19.85` |
-| `%clearlagenhanced_memory_used%` | Used memory in MB | `2048` |
-| `%clearlagenhanced_memory_max%` | Maximum memory in MB | `4096` |
-| `%clearlagenhanced_memory_percentage%` | Memory usage percentage | `50.0` |
-| `%clearlagenhanced_entities_total%` | Total entities on server | `1250` |
-| `%clearlagenhanced_next_clear%` | Seconds until next clear | `180` |
+| Placeholder                            | Description              | Example Output  |
+|----------------------------------------|--------------------------|-----------------|
+| `%clearlagenhanced_tps%`               | Current server TPS       | `19.85`         |
+| `%clearlagenhanced_memory_used%`       | Used memory in MB        | `2048`          |
+| `%clearlagenhanced_memory_max%`        | Maximum memory in MB     | `4096`          |
+| `%clearlagenhanced_memory_percentage%` | Memory usage percentage  | `50.0`          |
+| `%clearlagenhanced_entities_total%`    | Total entities on server | `1250`          |
+| `%clearlagenhanced_next_clear%`        | Seconds until next clear | `180`           |
 
 ## Configuration
 

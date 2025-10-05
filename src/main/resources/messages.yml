@@ -1,87 +1,156 @@
-# ClearLaggEnhanced Messages
-# Version: 1.3
+###############################################################################
+#                      ClearLaggEnhanced Messages                             #
+###############################################################################
+# Plugin Version: 1.3
+# Messages Version: 2 (auto-updated, do not modify manually)
+#
+# Color Scheme:
+#   - Primary: <gold> (highlights, headers)
+#   - Success: <green> (confirmations, positive actions)
+#   - Warning: <yellow> (warnings, alerts)
+#   - Error: <red> (errors, negative actions)
+#   - Info: <aqua> (informational)
+#   - Accent: <white> (values, emphasis)
+#   - Subtle: <gray> (secondary text)
+#
+# Supports MiniMessage format: https://docs.advntr.dev/minimessage/format.html
+###############################################################################
 
-# Global chat prefix used for messages sent by the plugin
-prefix: "<gray>[</gray><gold>ClearLaggEnhanced</gold><gray>]</gray>"
+# DO NOT MODIFY - Used for automatic updates
+version: 2
+
+# ============================================================================ #
+#                                 Global Prefix                                #
+# ============================================================================ #
+
+prefix: "<gray>[</gray><gold>ClearLagg</gold><gray>]</gray>"
+
+# ============================================================================ #
+#                            Entity Clear Warnings                             #
+# ============================================================================ #
 
 warnings:
-  entity-clear: "<yellow>⚠ Entities will be cleared in <red>{seconds}</red> seconds!"
-  title: "<gold>Entity Clear Warning</gold>"
+  entity-clear: "<gold>⚠</gold> <yellow>Entities will be cleared in <white>{seconds}</white> seconds!</yellow>"
+  title: "<gold><bold>Entity Clear Warning</bold></gold>"
+
+# ============================================================================ #
+#                             General Notifications                            #
+# ============================================================================ #
 
 notifications:
-  clear-complete: "<green>✓ Cleared <yellow>{count}</yellow> entities in <gray>{time}ms</gray>!"
-  no-permission: "<red>❌ You don't have permission to use this command!"
-  reload-complete: "<green>✓ ClearLaggEnhanced configuration reloaded!"
+  clear-complete: "<green>✓</green> <green>Cleared <white>{count}</white> entities in <gray>{time}ms</gray></green>"
+  no-permission: "<red>✗</red> <red>You don't have permission to use this command.</red>"
+  reload-complete: "<green>✓</green> <green>Configuration reloaded successfully!</green>"
+
+# ============================================================================ #
+#                               Command Messages                               #
+# ============================================================================ #
 
 commands:
   help:
-    header: "<green>=== ClearLaggEnhanced Help ==="
-    clear: "<yellow>/lagg clear - Clear entities now"
-    next: "<yellow>/lagg next - Time until next clear"
-    tps: "<yellow>/lagg tps - Show server TPS"
-    ram: "<yellow>/lagg ram - Show memory usage"
-    chunkfinder: "<yellow>/lagg chunkfinder - Find laggy chunks"
-    admin: "<yellow>/lagg admin - Open admin GUI"
-    reload: "<yellow>/lagg reload - Reload configuration"
-  unknown-subcommand: "<red>Unknown subcommand: <yellow>{sub}</yellow>"
+    header: "<gold><bold>═══ ClearLaggEnhanced Help ═══</bold></gold>"
+    clear: "<gold>▪</gold> <aqua>/lagg clear</aqua> <gray>-</gray> <white>Clear entities now</white>"
+    next: "<gold>▪</gold> <aqua>/lagg next</aqua> <gray>-</gray> <white>Time until next clear</white>"
+    tps: "<gold>▪</gold> <aqua>/lagg tps</aqua> <gray>-</gray> <white>Show server TPS</white>"
+    ram: "<gold>▪</gold> <aqua>/lagg ram</aqua> <gray>-</gray> <white>Show memory usage</white>"
+    chunkfinder: "<gold>▪</gold> <aqua>/lagg chunkfinder</aqua> <gray>-</gray> <white>Find laggy chunks</white>"
+    admin: "<gold>▪</gold> <aqua>/lagg admin</aqua> <gray>-</gray> <white>Open admin panel</white>"
+    reload: "<gold>▪</gold> <aqua>/lagg reload</aqua> <gray>-</gray> <white>Reload configuration</white>"
+  unknown-subcommand: "<red>✗</red> <red>Unknown command: <white>{sub}</white></red>"
   clear:
-    starting: "<green>Clearing entities...</green>"
+    starting: "<aqua>⟳</aqua> <aqua>Clearing entities...</aqua>"
+
+# ============================================================================ #
+#                               Error Messages                                 #
+# ============================================================================ #
 
 errors:
-  player-only: "<red>This command can only be used by players!"
-  message-manager-not-initialized: "<red>MessageManager not initialized!" # optional
+  player-only: "<red>✗</red> <red>This command can only be used by players.</red>"
+  message-manager-not-initialized: "<red>✗</red> <red>MessageManager not initialized.</red>"
+
+# ============================================================================ #
+#                          Performance Monitoring                              #
+# ============================================================================ #
 
 performance:
-  tps: "<green>Current TPS: <yellow>{tps}</yellow>"
-  memory: "<green>Memory Usage: <yellow>{usage}</yellow> <gray>({percentage}%)</gray>"
+  tps: "<aqua>⚡</aqua> <aqua>Current TPS:</aqua> <white>{tps}</white>"
+  memory: "<aqua>⚡</aqua> <aqua>Memory:</aqua> <white>{usage}</white> <gray>({percentage}%)</gray>"
   ram:
-    header: "<gold>=== RAM Usage ==="
-    used: "<green>Used: <yellow>{used}</yellow> MB (<yellow>{percent}</yellow>%)"
-    total: "<yellow>Total: {total} MB"
-    max: "<yellow>Max: {max} MB"
-  entities: "<green>Total Entities: <yellow>{count}</yellow>"
+    header: "<gold><bold>═══ RAM Usage ═══</bold></gold>"
+    used: "<green>▪</green> <green>Used:</green> <white>{used}</white> <gray>MB</gray> <yellow>({percent}%)</yellow>"
+    total: "<aqua>▪</aqua> <aqua>Total:</aqua> <white>{total}</white> <gray>MB</gray>"
+    max: "<gold>▪</gold> <gold>Max:</gold> <white>{max}</white> <gray>MB</gray>"
+  entities: "<aqua>⚡</aqua> <aqua>Total Entities:</aqua> <white>{count}</white>"
+
+# ============================================================================ #
+#                            Next Clear Information                            #
+# ============================================================================ #
 
 next-clear:
-  disabled: "<yellow>⚠ Automatic entity clearing is disabled"
-  imminent: "<green>⏰ Next clear: Any moment now!"
-  scheduled: "<green>⏰ Next automatic clear in: <yellow>{time}</yellow>"
+  disabled: "<yellow>⚠</yellow> <yellow>Automatic entity clearing is disabled</yellow>"
+  imminent: "<green>⏰</green> <green>Next clear:</green> <white>Any moment now!</white>"
+  scheduled: "<green>⏰</green> <green>Next automatic clear in:</green> <white>{time}</white>"
+
+# ============================================================================ #
+#                              Chunk Finder Tool                               #
+# ============================================================================ #
 
 chunkfinder:
-  scanning: "<green>Scanning for laggy chunks...</green>"
-  none-found: "<green>No laggy chunks found within <yellow>{radius}</yellow> chunks!</green>"
-  header: "<red>=== Top 10 Laggy Chunks Found ==="
-  entry: "<yellow>Chunk [<white>{x}</white>, <white>{z}</white>] - <gold>{count}</gold> entities (<gray>{distance}</gray> chunks away)</yellow>"
-  more: "<gray>... and <yellow>{more}</yellow> more</gray>"
+  scanning: "<aqua>⟳</aqua> <aqua>Scanning for laggy chunks...</aqua>"
+  none-found: "<green>✓</green> <green>No laggy chunks found within <white>{radius}</white> chunks!</green>"
+  header: "<red><bold>═══ Top 10 Laggy Chunks ═══</bold></red>"
+  entry: "<yellow>▪</yellow> <yellow>Chunk [<white>{x}</white>, <white>{z}</white>]</yellow> <gray>-</gray> <gold>{count}</gold> <gray>entities</gray> <dark_gray>({distance} chunks away)</dark_gray>"
+  more: "<gray>... and <yellow>{more}</yellow> more laggy chunks</gray>"
+
+# ============================================================================ #
+#                         Misc Entity Limiter Messages                         #
+# ============================================================================ #
 
 misc-entity-limiter:
-  blocked: "<red>[MiscEntityLimiter]</red> <gray>Blocked</gray> <yellow>{type}</yellow> <gray>in chunk</gray> <white>{x},{z}</white>"
-  trimmed: "<gold>[MiscEntityLimiter]</gold> <gray>Trimmed</gray> <yellow>{removed}</yellow> <yellow>{type}</yellow> <gray>in chunk</gray> <white>{x},{z}</white>"
+  blocked: "<red>⛔</red> <gray>[<red>MiscLimiter</red>]</gray> <gray>Blocked</gray> <yellow>{type}</yellow> <gray>in chunk</gray> <white>[{x}, {z}]</white>"
+  trimmed: "<gold>✂</gold> <gray>[<gold>MiscLimiter</gold>]</gray> <gray>Trimmed</gray> <yellow>{removed}</yellow> <yellow>{type}</yellow> <gray>in chunk</gray> <white>[{x}, {z}]</white>"
+
+# ============================================================================ #
+#                              Debug Messages                                  #
+# ============================================================================ #
 
 debug:
   mob-limiter:
-    cancelled: "<gray>[MobLimiter]</gray> Cancelled <yellow>{type}</yellow> spawn in chunk <white>{x},{z}</white> <gray>(limit reached)</gray>"
+    cancelled: "<gray>[<aqua>MobLimiter</aqua>]</gray> <gray>Cancelled</gray> <yellow>{type}</yellow> <gray>spawn in chunk</gray> <white>[{x}, {z}]</white> <dark_gray>(limit reached)</dark_gray>"
   spawner-limiter:
-    cancelled: "<gray>[SpawnerLimiter]</gray> Cancelled spawn due to mob cap at chunk <white>{x},{z}</white>"
-    set-delay: "<gray>[SpawnerLimiter]</gray> Set next spawner delay to <yellow>{delay}</yellow> at <white>{world} {x},{y},{z}</white>"
-    error: "<gray>[SpawnerLimiter]</gray> Failed to adjust spawner delay: <red>{error}</red>"
+    cancelled: "<gray>[<aqua>SpawnerLimiter</aqua>]</gray> <gray>Cancelled spawn at chunk</gray> <white>[{x}, {z}]</white> <dark_gray>(mob cap reached)</dark_gray>"
+    set-delay: "<gray>[<aqua>SpawnerLimiter</aqua>]</gray> <gray>Set delay to</gray> <yellow>{delay}</yellow> <gray>at</gray> <white>{world} [{x}, {y}, {z}]</white>"
+    error: "<gray>[<red>SpawnerLimiter</red>]</gray> <red>Failed to adjust delay:</red> <white>{error}</white>"
   redstone:
-    neutralized: "<gray>[RedstoneLimiter]</gray> Neutralized redstone change at <white>{world} {x},{y},{z}</white> (chunk <white>{cx},{cz}</white>)"
-    piston-extend: "<gray>[RedstoneLimiter]</gray> Cancelled piston extend at <white>{world} {x},{y},{z}</white> (chunk <white>{cx},{cz}</white>)"
-    piston-retract: "<gray>[RedstoneLimiter]</gray> Cancelled piston retract at <white>{world} {x},{y},{z}</white> (chunk <white>{cx},{cz}</white>)"
-    dispense: "<gray>[RedstoneLimiter]</gray> Cancelled dispense at <white>{world} {x},{y},{z}</white> (chunk <white>{cx},{cz}</white>)"
+    neutralized: "<gray>[<gold>RedstoneLimiter</gold>]</gray> <gray>Neutralized change at</gray> <white>{world} [{x}, {y}, {z}]</white> <dark_gray>(chunk [{cx}, {cz}])</dark_gray>"
+    piston-extend: "<gray>[<gold>RedstoneLimiter</gold>]</gray> <gray>Cancelled piston extend at</gray> <white>{world} [{x}, {y}, {z}]</white> <dark_gray>(chunk [{cx}, {cz}])</dark_gray>"
+    piston-retract: "<gray>[<gold>RedstoneLimiter</gold>]</gray> <gray>Cancelled piston retract at</gray> <white>{world} [{x}, {y}, {z}]</white> <dark_gray>(chunk [{cx}, {cz}])</dark_gray>"
+    dispense: "<gray>[<gold>RedstoneLimiter</gold>]</gray> <gray>Cancelled dispense at</gray> <white>{world} [{x}, {y}, {z}]</white> <dark_gray>(chunk [{cx}, {cz}])</dark_gray>"
   hopper:
-    throttling: "<gray>[HopperLimiter]</gray> Throttling moves in chunk <white>{x},{z}</white>"
+    throttling: "<gray>[<aqua>HopperLimiter</aqua>]</gray> <gray>Throttling transfers in chunk</gray> <white>[{x}, {z}]</white>"
+
+# ============================================================================ #
+#                              GUI Messages                                    #
+# ============================================================================ #
 
 gui:
-  reload-complete: "<green>Configuration reloaded successfully!</green>"
-  enter-interval: "<yellow>Enter new clearing interval in seconds:</yellow>"
-  type-cancel: "<gray>Type 'cancel' to cancel.</gray>"
-  input-cancelled: "<gray>Input cancelled.</gray>"
-  interval-min: "<red>Interval must be at least <yellow>{min}</yellow> seconds!</red>"
-  interval-set: "<green>Entity clearing interval set to <yellow>{interval}</yellow> seconds!</green>"
-  invalid-number: "<red>Invalid number! Please enter a valid integer.</red>"
+  reload-complete: "<green>✓</green> <green>Configuration reloaded successfully!</green>"
+  enter-interval: "<aqua>▶</aqua> <aqua>Enter new clearing interval in seconds:</aqua>"
+  type-cancel: "<gray>Type </gray><yellow>'cancel'</yellow><gray> to cancel.</gray>"
+  input-cancelled: "<yellow>⚠</yellow> <yellow>Input cancelled.</yellow>"
+  interval-min: "<red>✗</red> <red>Interval must be at least <white>{min}</white> seconds!</red>"
+  interval-set: "<green>✓</green> <green>Entity clearing interval set to <white>{interval}</white> seconds!</green>"
+  invalid-number: "<red>✗</red> <red>Invalid number! Please enter a valid integer.</red>"
+
+# ============================================================================ #
+#                            Update Notifications                              #
+# ============================================================================ #
 
 update-notifier:
   - ""
-  - "<yellow>Update available!</yellow> <gray>(Current: </gray><red><current_version></red><gray>, New: </gray><green><new_version></green><gray>)</gray>"
-  - "<aqua><u>Click to open Modrinth page</u></aqua>"
+  - "<gold><bold>═══════════════════════════════════════</bold></gold>"
+  - "<yellow>⚠</yellow> <yellow><bold>Update Available!</bold></yellow>"
+  - "<gray>Current:</gray> <red><current_version></red> <gray>→</gray> <gray>New:</gray> <green><new_version></green>"
+  - "<aqua><u>» Click to open Modrinth page «</u></aqua>"
+  - "<gold><bold>═══════════════════════════════════════</bold></gold>"
+  - ""

@@ -30,9 +30,9 @@ public class EntityManager {
         if (!configManager.getBoolean("entity-clearing.enabled", true)) {
             return;
         }
-        
-        clearInterval = configManager.getInt("entity-clearing.interval", 300); // Keep in seconds
-        int intervalTicks = clearInterval * 20; // Convert to ticks for scheduler
+
+        clearInterval = configManager.getInt("entity-clearing.interval", 300);
+        int intervalTicks = clearInterval * 20;
 
         nextClearTime = System.currentTimeMillis() + (clearInterval * 1000);
         
@@ -82,7 +82,6 @@ public class EntityManager {
     private int clearEntitiesSync() {
         int cleared = 0;
 
-        List<String> blacklist = configManager.getStringList("entity-clearing.blacklist");
         List<String> whitelist = configManager.getStringList("entity-clearing.whitelist");
         List<String> worlds = configManager.getStringList("entity-clearing.worlds");
 
@@ -92,7 +91,7 @@ public class EntityManager {
             }
 
             for (Entity entity : world.getEntities()) {
-                if (shouldClearEntity(entity, blacklist, whitelist)) {
+                if (shouldClearEntity(entity, whitelist)) {
                     entity.remove();
                     cleared++;
                 }
@@ -101,8 +100,8 @@ public class EntityManager {
 
         return cleared;
     }
-    
-    private boolean shouldClearEntity(Entity entity, List<String> blacklist, List<String> whitelist) {
+
+    private boolean shouldClearEntity(Entity entity, List<String> whitelist) {
         EntityType type = entity.getType();
         String typeName = type.name();
 
@@ -125,11 +124,7 @@ public class EntityManager {
             }
         }
 
-        if (blacklist.contains(typeName)) {
-            return true;
-        }
-
-        return !(entity instanceof LivingEntity);
+        return true;
     }
 
     public long getTimeUntilNextClear() {

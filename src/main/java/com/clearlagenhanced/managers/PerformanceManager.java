@@ -128,14 +128,5 @@ public class PerformanceManager {
         });
     }
 
-    private static class ChunkInfo {
-        final int x, z, entityCount, distance;
-
-        ChunkInfo(int x, int z, int entityCount, int distance) {
-            this.x = x;
-            this.z = z;
-            this.entityCount = entityCount;
-            this.distance = distance;
-        }
-    }
+    private record ChunkInfo(int x, int z, int entityCount, int distance) {}
 }
