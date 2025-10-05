@@ -68,17 +68,17 @@ lag-prevention:
   
   # ---------------------------- Redstone Limiter ---------------------------- #
   redstone-limiter:
-    enabled: true
+    enabled: false
     max-redstone-per-chunk: 100
   
   # ----------------------------- Hopper Limiter ----------------------------- #
   hopper-limiter:
-    enabled: true
+    enabled: false
     transfer-cooldown: 8  # in ticks
   
   # ---------------------------- Spawner Limiter ----------------------------- #
   spawner-limiter:
-    enabled: true
+    enabled: false
     spawn-delay-multiplier: 1.5
   
   # ------------------------ Misc Entity Limiter ---------------------------- #
