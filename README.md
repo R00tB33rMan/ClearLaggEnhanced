@@ -20,11 +20,11 @@ Special thanks to **bob7l**, the original developer of ClearLagg, whose work ins
 - **Optimized Database**: SQLite with HikariCP pooling and strategic indexes for 10-100x faster queries
 
 ### What's New in v2.0
-- 🧩 **Full Folia Compatibility** – Fully supports Folia with complete region-thread safety
-- ⚡ **Massive Performance Boost** – All async tasks rewritten using Folia-native schedulers
-- 🧠 **Entity Clearing Overhaul** – Non-blocking, latch-based entity sweeping for large servers
-- 🧱 **Redstone & Hopper Systems Rebuilt** – Uses region-aware chunk scanning for stable throttling
-- 🧩 **Misc Entity Limiter Rewritten** – Now supports named/tagged exemptions without blocking ticks
+- 🧩 **Full Folia Compatibility**: Fully supports Folia with complete region-thread safety
+- ⚡ **Massive Performance Boost**: All async tasks rewritten using Folia-native schedulers
+- 🧠 **Entity Clearing Overhaul**: Non-blocking, latch-based entity sweeping for large servers
+- 🧱 **Redstone & Hopper Systems Rebuilt**: Uses region-aware chunk scanning for stable throttling
+- 🧩 **Misc Entity Limiter Rewritten**: Now supports named/tagged exemptions without blocking ticks
 
 ## Installation
 
