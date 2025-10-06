@@ -19,12 +19,12 @@ Special thanks to **bob7l**, the original developer of ClearLagg, whose work ins
 - **PlaceholderAPI Support**: Use plugin data in other plugins
 - **Optimized Database**: SQLite with HikariCP pooling and strategic indexes for 10-100x faster queries
 
-### What's New in v1.4
-- 🔄 **Auto-Update System**: Configs automatically update while preserving your customizations
-- 🎨 **Professional Messages**: Complete overhaul with consistent colors, icons, and formatting
-- ⚡ **Performance Optimizations**: Database indexes and main thread optimizations
-- 🧹 **Simplified Entity Clearing**: Removed confusing blacklist - now just whitelist what to protect!
-- 📊 **Enhanced Database**: VARCHAR optimization and strategic indexes for faster queries
+### What's New in v2.0
+- 🧩 **Full Folia Compatibility** – Fully supports Folia with complete region-thread safety
+- ⚡ **Massive Performance Boost** – All async tasks rewritten using Folia-native schedulers
+- 🧠 **Entity Clearing Overhaul** – Non-blocking, latch-based entity sweeping for large servers
+- 🧱 **Redstone & Hopper Systems Rebuilt** – Uses region-aware chunk scanning for stable throttling
+- 🧩 **Misc Entity Limiter Rewritten** – Now supports named/tagged exemptions without blocking ticks
 
 ## Installation
 
