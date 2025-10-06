@@ -1,17 +1,24 @@
 package com.clearlagenhanced.managers;
 
 import com.clearlagenhanced.ClearLaggEnhanced;
+import com.tcoded.folialib.impl.PlatformScheduler;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MiscEntitySweepService {
 
     private final ClearLaggEnhanced plugin;
+    private final PlatformScheduler scheduler;
     private final Map<EntityType, Integer> caps;
     private final Set<String> worldFilter;
     private final boolean protectNamed;
@@ -21,12 +28,13 @@ public class MiscEntitySweepService {
     private final long notifyThrottleTicks;
     private final String adminPerm;
 
-    private int taskId = -1;
-    private int cursor = 0;
-    private final Map<String, Long> lastNotifyTick = new HashMap<>(); // key: world:x,z:type
+    private WrappedTask sweepTask;
+    private final AtomicInteger cursor = new AtomicInteger(0);
+    private final Map<String, Long> lastNotifyTick = new ConcurrentHashMap<>();
 
-    public MiscEntitySweepService(ClearLaggEnhanced plugin, ConfigManager cfg) {
+    public MiscEntitySweepService(@NotNull ClearLaggEnhanced plugin, @NotNull ConfigManager cfg) {
         this.plugin = plugin;
+        this.scheduler = ClearLaggEnhanced.scheduler();
 
         this.caps = loadCaps(cfg);
         this.worldFilter = new HashSet<>(cfg.getStringList("lag-prevention.misc-entity-limiter.worlds"));
@@ -39,7 +47,7 @@ public class MiscEntitySweepService {
         this.notifyThrottleTicks = throttleSeconds * 20L;
     }
 
-    private Map<EntityType, Integer> loadCaps(ConfigManager cfg) {
+    private Map<EntityType, Integer> loadCaps(@NotNull ConfigManager cfg) {
         Map<EntityType, Integer> map = new EnumMap<>(EntityType.class);
         var sec = cfg.getConfig().getConfigurationSection("lag-prevention.misc-entity-limiter.limits-per-chunk");
         if (sec != null) {
@@ -47,35 +55,47 @@ public class MiscEntitySweepService {
                 try {
                     EntityType type = EntityType.valueOf(key.toUpperCase(Locale.ROOT));
                     int cap = sec.getInt(key, -1);
-                    if (cap >= 0) map.put(type, cap);
-                } catch (IllegalArgumentException ignored) {}
+                    if (cap >= 0) {
+                        map.put(type, cap);
+                    }
+                } catch (IllegalArgumentException ignored) {
+                }
             }
         }
+
         return map;
     }
 
     public void start() {
-        if (taskId != -1) return;
-        taskId = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this::tick, intervalTicks, intervalTicks);
+        if (sweepTask != null) {
+            return;
+        }
+
+        sweepTask = scheduler.runTimer(this::tick, intervalTicks, intervalTicks);
     }
 
     public void shutdown() {
-        if (taskId != -1) {
-            plugin.getServer().getScheduler().cancelTask(taskId);
-            taskId = -1;
+        if (sweepTask != null) {
+            scheduler.cancelTask(sweepTask);
+            sweepTask = null;
         }
+
         lastNotifyTick.clear();
     }
 
-    private boolean isWorldAllowed(World w) {
-        return worldFilter.isEmpty() || worldFilter.contains(w.getName());
+    private boolean isWorldAllowed(@NotNull World world) {
+        return worldFilter.isEmpty() || worldFilter.contains(world.getName());
     }
 
-    private boolean exempt(Entity e) {
-        if (protectNamed && e.getCustomName() != null && !e.getCustomName().isEmpty()) return true;
+    private boolean exempt(@NotNull Entity e) {
+        if (protectNamed && e.getCustomName() != null && !e.getCustomName().isEmpty()) {
+            return true;
+        }
+
         if (!protectedTags.isEmpty()) {
             for (String t : protectedTags) if (e.getScoreboardTags().contains(t)) return true;
         }
+
         return false;
     }
 
@@ -83,79 +103,147 @@ public class MiscEntitySweepService {
         List<World> worlds = plugin.getServer().getWorlds();
         List<Chunk> chunks = new ArrayList<>();
         for (World w : worlds) {
-            if (!isWorldAllowed(w)) continue;
+            if (!isWorldAllowed(w)) {
+                continue;
+            }
+
             chunks.addAll(Arrays.asList(w.getLoadedChunks()));
         }
-        if (chunks.isEmpty()) return;
 
-        int processed = 0;
-        for (; processed < maxChunksPerTick && !chunks.isEmpty(); processed++) {
-            if (cursor >= chunks.size()) cursor = 0;
-            Chunk c = chunks.get(cursor++);
-            enforceChunk(c);
+        if (chunks.isEmpty()) {
+            return;
+        }
+
+        int size = chunks.size();
+        for (int processed = 0; processed < maxChunksPerTick; processed++) {
+            int i = Math.floorMod(cursor.getAndIncrement(), size);
+            Chunk chunk = chunks.get(i);
+            scheduler.runAtLocation(chunk.getBlock(0, 0, 0).getLocation(), task -> enforceChunk(chunk));
         }
     }
 
     private void enforceChunk(Chunk chunk) {
-        long now = chunk.getWorld().getFullTime();
+        chunk.getWorld().getFullTime();
         Map<EntityType, List<Entity>> byType = new EnumMap<>(EntityType.class);
-        for (Entity e : chunk.getEntities()) {
-            if (!caps.containsKey(e.getType())) continue;
-            byType.computeIfAbsent(e.getType(), k -> new ArrayList<>()).add(e);
+        for (Entity entity : chunk.getEntities()) {
+            if (!caps.containsKey(entity.getType())) {
+                continue;
+            }
+
+            byType.computeIfAbsent(entity.getType(), k -> new ArrayList<>()).add(entity);
         }
+
         for (Map.Entry<EntityType, List<Entity>> entry : byType.entrySet()) {
             EntityType type = entry.getKey();
             int cap = caps.getOrDefault(type, -1);
-            if (cap < 0) continue;
+            if (cap < 0) {
+                continue;
+            }
+
             List<Entity> list = entry.getValue();
             List<Entity> candidates = new ArrayList<>();
-            for (Entity e : list) if (!exempt(e)) candidates.add(e);
+            for (Entity e : list) {
+                if (!exempt(e)) candidates.add(e);
+            }
+
             int over = candidates.size() - cap;
-            if (over <= 0) continue;
+            if (over <= 0) {
+                continue;
+            }
 
             candidates.sort(this::compareForRemoval);
 
-            int removed = 0;
-            for (int i = 0; i < over && i < candidates.size(); i++) {
-                Entity victim = candidates.get(i);
-                victim.remove();
-                removed++;
+            AtomicInteger remaining = new AtomicInteger(over);
+            AtomicInteger scheduled = new AtomicInteger(0);
+            AtomicInteger removedCount = new AtomicInteger(0);
+
+            for (Entity victim : candidates) {
+                if (remaining.get() <= 0) {
+                    break;
+                }
+
+                scheduled.incrementAndGet();
+                final AtomicBoolean once = new AtomicBoolean(false);
+
+                scheduler.runAtEntity(victim, t -> {
+                    if (!once.compareAndSet(false, true)) {
+                        return;
+                    }
+
+                    int before = remaining.getAndUpdate(curr -> curr > 0 ? curr - 1 : curr);
+                    if (before <= 0) {
+                        if (scheduled.decrementAndGet() == 0 && removedCount.get() > 0) {
+                            notifyAdmins(chunk, type, removedCount.get(), false);
+                        }
+
+                        return;
+                    }
+
+                    boolean removed = false;
+                    if (!victim.isDead() && victim.getType() == type && !exempt(victim)) {
+                        victim.remove();
+                        removed = true;
+                    }
+
+                    if (removed) {
+                        removedCount.incrementAndGet();
+                    } else {
+                        remaining.incrementAndGet();
+                    }
+
+                    if (scheduled.decrementAndGet() == 0 && removedCount.get() > 0) {
+                        notifyAdmins(chunk, type, removedCount.get(), false);
+                    }
+                });
             }
-            if (removed > 0) notifyAdmins(chunk, type, removed, false);
         }
     }
 
     private int compareForRemoval(Entity a, Entity b) {
         boolean aNamed = a.getCustomName() != null && !a.getCustomName().isEmpty();
         boolean bNamed = b.getCustomName() != null && !b.getCustomName().isEmpty();
-        if (aNamed != bNamed) return aNamed ? 1 : -1; // unnamed first
+        if (aNamed != bNamed) {
+            return aNamed ? 1 : -1;
+        }
 
         double ap = nearestPlayerDistSq(a);
         double bp = nearestPlayerDistSq(b);
-        int cmp = Double.compare(bp, ap); // further first
-        if (cmp != 0) return cmp;
+        int cmp = Double.compare(bp, ap);
+        if (cmp != 0) {
+            return cmp;
+        }
 
         return Integer.compare(System.identityHashCode(a), System.identityHashCode(b));
     }
 
-    private double nearestPlayerDistSq(Entity e) {
+    private double nearestPlayerDistSq(@NotNull Entity entity) {
         double min = Double.POSITIVE_INFINITY;
-        for (Player p : e.getWorld().getPlayers()) {
-            double d = p.getLocation().distanceSquared(e.getLocation());
-            if (d < min) min = d;
+        for (Player player : entity.getWorld().getPlayers()) {
+            double d = player.getLocation().distanceSquared(entity.getLocation());
+            if (d < min) {
+                min = d;
+            }
         }
-        if (Double.isInfinite(min)) return 1.0E12;
+
+        if (Double.isInfinite(min)) {
+            return 1.0E12;
+        }
+
         return min;
     }
 
-    public void notifyAdmins(Chunk chunk, EntityType type, int count, boolean blocked) {
+    public void notifyAdmins(@NotNull Chunk chunk, @NotNull EntityType type, int count, boolean blocked) {
         long nowTick = chunk.getWorld().getFullTime();
-        String nkey = chunk.getWorld().getName() + ":" + chunk.getX() + "," + chunk.getZ() + ":" + type.name();
-        long last = lastNotifyTick.getOrDefault(nkey, 0L);
-        if ((nowTick - last) < notifyThrottleTicks) return;
+        final String nkey = chunk.getWorld().getName() + ":" + chunk.getX() + "," + chunk.getZ() + ":" + type.name();
+
+        Long prev = lastNotifyTick.get(nkey);
+        if (prev != null && (nowTick - prev) < notifyThrottleTicks) {
+            return;
+        }
+
         lastNotifyTick.put(nkey, nowTick);
 
-        java.util.Map<String, String> ph = new java.util.HashMap<>();
+        Map<String, String> ph = new ConcurrentHashMap<>();
         ph.put("x", String.valueOf(chunk.getX()));
         ph.put("z", String.valueOf(chunk.getZ()));
         ph.put("type", type.name());

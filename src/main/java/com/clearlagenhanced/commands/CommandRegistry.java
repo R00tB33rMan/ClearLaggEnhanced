@@ -1,15 +1,12 @@
 package com.clearlagenhanced.commands;
 
-import com.clearlagenhanced.ClearLaggEnhanced;
 import com.clearlagenhanced.commands.subcommands.*;
 import com.clearlagenhanced.utils.MessageUtils;
-import org.bukkit.Bukkit;
+import lombok.Getter;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-
+@Getter
 public enum CommandRegistry {
 
     HELP("help", new HelpCommand()),
@@ -24,17 +21,9 @@ public enum CommandRegistry {
     private final String name;
     private final SubCommand executor;
 
-    CommandRegistry(String name, SubCommand executor) {
+    CommandRegistry(@NotNull String name, @NotNull SubCommand executor) {
         this.name = name;
         this.executor = executor;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public SubCommand getExecutor() {
-        return executor;
     }
 
     /**
@@ -43,11 +32,12 @@ public enum CommandRegistry {
      * @param args The command arguments
      * @return true if command executed successfully
      */
-    public boolean execute(CommandSender sender, String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String[] args) {
         if (!sender.hasPermission(executor.getPermission())) {
             MessageUtils.sendMessage(sender, "notifications.no-permission");
             return true;
         }
+
         return executor.execute(sender, args);
     }
 
@@ -56,12 +46,13 @@ public enum CommandRegistry {
      * @param name Command name to search for
      * @return CommandRegistry enum or null if not found
      */
-    public static CommandRegistry fromString(String name) {
+    public static CommandRegistry fromString(@NotNull String name) {
         for (CommandRegistry cmd : values()) {
             if (cmd.name.equalsIgnoreCase(name)) {
                 return cmd;
             }
         }
+
         return null;
     }
 
@@ -75,6 +66,7 @@ public enum CommandRegistry {
         for (int i = 0; i < commands.length; i++) {
             names[i] = commands[i].name;
         }
+
         return names;
     }
 }

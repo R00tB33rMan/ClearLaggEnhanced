@@ -2,16 +2,21 @@ name: ClearLaggEnhanced
 version: ${project.version}
 main: com.clearlagenhanced.ClearLaggEnhanced
 api-version: 1.20
+folia-supported: true
 authors: [djtmk]
 description: A modern, customizable lag prevention plugin for Minecraft servers
 website: https://github.com/BusyBee-Development/ClearLaggEnhanced
 softdepend: [PlaceholderAPI]
+libraries:
+  - com.zaxxer:HikariCP:7.0.2
+  - org.xerial:sqlite-jdbc:3.50.3.0
+  - net.kyori:adventure-text-minimessage:4.24.0
 
 commands:
   lagg:
     description: Main ClearLaggEnhanced command
     usage: /lagg <subcommand>
-    aliases: [clearlagg, cl, cle]
+    aliases: [clearlagg, clearlag, cl, cle]
 
 permissions:
   CLE.*:

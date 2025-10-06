@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -28,9 +29,9 @@ public final class VersionCheck implements Listener {
             "https://modrinth.com/plugin/" + MODRINTH_PROJECT_SLUG;
 
     private final ClearLaggEnhanced plugin;
-    private volatile String latestVersion; // volatile for safe cross-thread reads
+    private volatile String latestVersion;
 
-    public VersionCheck(ClearLaggEnhanced plugin) {
+    public VersionCheck(@NotNull ClearLaggEnhanced plugin) {
         this.plugin = plugin;
         fetchLatestVersion();
     }
@@ -41,22 +42,30 @@ public final class VersionCheck implements Listener {
                 URL url = new URL(MODRINTH_VERSIONS_API);
                 try (InputStreamReader reader = new InputStreamReader(url.openStream())) {
                     JsonArray versionList = JsonParser.parseReader(reader).getAsJsonArray();
-                    if (versionList != null && versionList.size() > 0) {
+                    if (versionList != null && !versionList.isEmpty()) {
                         JsonObject selected = null;
                         String maxDate = null;
                         for (JsonElement el : versionList) {
-                            if (el == null || !el.isJsonObject()) continue;
+                            if (el == null || !el.isJsonObject()) {
+                                continue;
+                            }
+
                             JsonObject obj = el.getAsJsonObject();
-                            if (!obj.has("date_published") || obj.get("date_published").isJsonNull()) continue;
+                            if (!obj.has("date_published") || obj.get("date_published").isJsonNull()) {
+                                continue;
+                            }
+
                             String date = obj.get("date_published").getAsString();
                             if (maxDate == null || (date != null && date.compareTo(maxDate) > 0)) {
                                 maxDate = date;
                                 selected = obj;
                             }
                         }
-                        if (selected == null && versionList.size() > 0) {
+
+                        if (selected == null && !versionList.isEmpty()) {
                             selected = versionList.get(0).getAsJsonObject();
                         }
+
                         if (selected != null && selected.has("version_number") && !selected.get("version_number").isJsonNull()) {
                             this.latestVersion = selected.get("version_number").getAsString();
                         }
@@ -69,7 +78,7 @@ public final class VersionCheck implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(@NotNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (latestVersion == null || !player.hasPermission("CLE.admin")) {
             return;
@@ -81,7 +90,7 @@ public final class VersionCheck implements Listener {
             String prefix = plugin.getMessageManager().getConfig().getString("prefix", "<gray>[</gray><gold>ClearLaggEnhanced</gold><gray>]</gray>");
             MiniMessage mm = MiniMessage.miniMessage();
 
-            if (lines == null || lines.isEmpty()) {
+            if (lines.isEmpty()) {
                 Component fallback = mm.deserialize(
                         prefix + " <yellow>Update available!</yellow> <gray>(Current: </gray><red><current></red><gray>, New: </gray><green><latest></green><gray>)</gray> <aqua><u>Click to open</u></aqua>",
                         Placeholder.unparsed("current", currentVersion),
@@ -91,9 +100,7 @@ public final class VersionCheck implements Listener {
                 return;
             }
 
-            if (!lines.isEmpty()) {
-                lines.set(0, prefix + " " + lines.get(0));
-            }
+            lines.set(0, prefix + " " + lines.get(0));
 
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
@@ -106,12 +113,13 @@ public final class VersionCheck implements Listener {
                 if (i == lines.size() - 1) {
                     component = component.clickEvent(ClickEvent.openUrl(MODRINTH_PROJECT_URL));
                 }
+
                 player.sendMessage(component);
             }
         }
     }
 
-    private boolean isNewerVersion(String version1, String version2) {
+    private boolean isNewerVersion(@NotNull String version1, @NotNull String version2) {
 
         String v1 = version1.replaceAll("[^\\d.]", "");
         String v2 = version2.replaceAll("[^\\d.]", "");
@@ -123,13 +131,19 @@ public final class VersionCheck implements Listener {
         for (int i = 0; i < length; i++) {
             int num1 = (i < parts1.length) ? parseSafe(parts1[i]) : 0;
             int num2 = (i < parts2.length) ? parseSafe(parts2[i]) : 0;
-            if (num1 > num2) return true;
-            if (num1 < num2) return false;
+            if (num1 > num2) {
+                return true;
+            }
+
+            if (num1 < num2) {
+                return false;
+            }
         }
+
         return false;
     }
 
-    private int parseSafe(String s) {
+    private int parseSafe(@NotNull String s) {
         try {
             return Integer.parseInt(s);
         } catch (NumberFormatException ignored) {
