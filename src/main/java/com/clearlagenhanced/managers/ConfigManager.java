@@ -12,11 +12,10 @@ import java.util.List;
 
 public class ConfigManager {
 
-    private static final int CURRENT_CONFIG_VERSION = 1;
+    private static final int CURRENT_CONFIG_VERSION = 3;
 
     private final ClearLaggEnhanced plugin;
     @Getter private FileConfiguration config;
-    private boolean debuggingInProgress = false;
 
     public ConfigManager(@NotNull ClearLaggEnhanced plugin) {
         this.plugin = plugin;
@@ -27,7 +26,6 @@ public class ConfigManager {
         plugin.reloadConfig();
         config = plugin.getConfig();
         checkConfigVersion();
-        debugLog("Configuration reloaded");
     }
 
     private void checkConfigVersion() {
@@ -99,88 +97,65 @@ public class ConfigManager {
         }
     }
 
-    private void debugLog(@NotNull String message) {
-        if (debuggingInProgress) {
-            return;
-        }
-
-        debuggingInProgress = true;
-        try {
-            if (config.getBoolean("debug", false)) {
-                plugin.getLogger().info("[DEBUG] ConfigManager: " + message);
-            }
-        } finally {
-            debuggingInProgress = false;
-        }
-    }
-
     public boolean getBoolean(@NotNull String path, boolean defaultValue) {
-        boolean value = config.getBoolean(path, defaultValue);
-        debugLog("Getting boolean " + path + " = " + value);
-        return value;
+        return config.getBoolean(path, defaultValue);
     }
 
     public boolean getBoolean(@NotNull String path) {
-        boolean value = config.getBoolean(path);
-        debugLog("Getting boolean " + path + " = " + value);
-        return value;
+        return config.getBoolean(path);
     }
 
     public int getInt(@NotNull String path, int defaultValue) {
-        int value = config.getInt(path, defaultValue);
-        debugLog("Getting int " + path + " = " + value);
-        return value;
+        return config.getInt(path, defaultValue);
     }
 
     public int getInt(@NotNull String path) {
-        int value = config.getInt(path);
-        debugLog("Getting int " + path + " = " + value);
-        return value;
+        return config.getInt(path);
     }
 
     public double getDouble(@NotNull String path, double defaultValue) {
-        double value = config.getDouble(path, defaultValue);
-        debugLog("Getting double " + path + " = " + value);
-        return value;
+        return config.getDouble(path, defaultValue);
     }
 
     public double getDouble(@NotNull String path) {
-        double value = config.getDouble(path);
-        debugLog("Getting double " + path + " = " + value);
-        return value;
+        return config.getDouble(path);
     }
 
     public String getString(@NotNull String path, @NotNull String defaultValue) {
-        String value = config.getString(path, defaultValue);
-        debugLog("Getting string " + path + " = " + value);
-        return value;
+        return config.getString(path, defaultValue);
     }
 
     public String getString(@NotNull String path) {
-        String value = config.getString(path);
-        debugLog("Getting string " + path + " = " + value);
-        return value;
+        return config.getString(path);
     }
 
     public List<String> getStringList(@NotNull String path) {
-        List<String> value = config.getStringList(path);
-        debugLog("Getting string list " + path + " = " + value);
-        return value;
+        return config.getStringList(path);
     }
 
     public List<Integer> getIntegerList(@NotNull String path) {
-        List<Integer> value = config.getIntegerList(path);
-        debugLog("Getting integer list " + path + " = " + value);
-        return value;
+        return config.getIntegerList(path);
+    }
+
+    public java.util.Map<String, Object> getConfigSection(@NotNull String path) {
+        if (config.isConfigurationSection(path)) {
+            java.util.Map<String, Object> result = new java.util.HashMap<>();
+            org.bukkit.configuration.ConfigurationSection section = config.getConfigurationSection(path);
+            if (section != null) {
+                for (String key : section.getKeys(false)) {
+                    result.put(key, section.get(key));
+                }
+            }
+            return result;
+        }
+        return null;
     }
 
     public void set(@NotNull String path, @NotNull Object value) {
-        debugLog("Setting " + path + " = " + value);
         config.set(path, value);
 
         try {
             plugin.saveConfig();
-            debugLog("Configuration saved successfully");
         } catch (Exception e) {
             plugin.getLogger().severe("Failed to save configuration: " + e.getMessage());
         }

@@ -11,20 +11,32 @@ Special thanks to **bob7l**, the original developer of ClearLagg, whose work ins
 ### Core Features
 - **Automatic Entity Clearing**: Remove dropped items, experience orbs, and entities at configurable intervals
 - **Smart Whitelist System**: Protect only what you want - everything else gets cleared automatically
-- **Lag Prevention Modules**: Mob limiter, redstone limiter, hopper optimization, and spawner control
+- **Advanced Lag Prevention**:
+  - **Per-Type Mob Limiter** with individual species limits (e.g., max 10 zombies per chunk)
+  - **Smart Redstone Limiter** with block-level and chunk-level controls (inspired by RedstoneLimiter)
+  - **Hopper Optimization** with transfer cooldown and dynamic throttling
+  - **Spawner Control** with delay multipliers
 - **Performance Monitoring**: Real-time TPS and memory usage tracking with color-coded indicators
 - **Smart Protection**: Protect named entities, tamed animals, and whitelisted entities
 - **Customizable Notifications**: Warning system before entity clearing with multiple display options
 - **Interactive Admin GUI**: Easy-to-use graphical interface with real-time performance updates
 - **PlaceholderAPI Support**: Use plugin data in other plugins
 - **Optimized Database**: SQLite with HikariCP pooling and strategic indexes for 10-100x faster queries
+- **Folia Compatible**: Full support for multi-threaded servers
 
-### What's New in v1.4
-- 🔄 **Auto-Update System**: Configs automatically update while preserving your customizations
-- 🎨 **Professional Messages**: Complete overhaul with consistent colors, icons, and formatting
-- ⚡ **Performance Optimizations**: Database indexes and main thread optimizations
-- 🧹 **Simplified Entity Clearing**: Removed confusing blacklist - now just whitelist what to protect!
-- 📊 **Enhanced Database**: VARCHAR optimization and strategic indexes for faster queries
+### What's New in v2.0-Beta
+- 🚀 **Folia Support**: Full compatibility with multi-threaded Folia servers
+- 🧠 **Smart Redstone Limiter**: Complete rewrite with block-level and chunk-level controls
+  - Time-based reset periods (not per-tick)
+  - Individual block activation limits
+  - Chunk-wide activation limits
+  - Piston push/pull limits
+  - Inspired by the popular RedstoneLimiter plugin
+- 🐾 **Per-Type Mob Limiter**: Set individual limits for each mob species
+  - Example: Max 10 zombies, 15 villagers, 8 creepers per chunk
+  - Works alongside global mob limit
+- 🎨 **Non-Italic GUI**: All GUI text now displays in regular font (not italic)
+- 📝 **Improved Messages**: Better debug output for lag prevention modules
 
 ## Installation
 
@@ -110,28 +122,62 @@ entity-clearing:
 ```
 
 #### Lag Prevention Modules
+
+##### Mob Limiter (Per-Type Limits)
 ```yaml
 lag-prevention:
   mob-limiter:
     enabled: true
-    max-mobs-per-chunk: 50
-    exempt-named-mobs: true
-  
+    max-mobs-per-chunk: 50  # Global limit
+
+    # Per-type limits (NEW!)
+    per-type-limits:
+      enabled: true
+      limits:
+        ZOMBIE: 10
+        VILLAGER: 15
+        COW: 12
+        CREEPER: 8
+        # Add any mob type
+```
+
+##### Smart Redstone Limiter
+```yaml
   redstone-limiter:
-    enabled: true
-    max-redstone-per-chunk: 100
-    disable-fast-clocks: true
-    clock-detection-threshold: 10
-  
+    enabled: false
+    reset-period-ms: 3000  # Reset counters every 3 seconds
+
+    # Block-level limiting (per individual block)
+    blocks:
+      enabled: true
+      threshold:
+        GLOBAL: 2           # Default for all blocks
+        PISTON: 1           # Each piston activates 1x per period
+        OBSERVER: 3
+        DISPENSER: 2
+
+    # Chunk-level limiting (total per chunk)
+    chunks:
+      enabled: true
+      threshold: 1024       # Total activations per chunk
+
+    # Piston push limit
+    max-piston-push: 12     # Max blocks pushed/pulled
+```
+
+##### Hopper Limiter
+```yaml
   hopper-limiter:
-    enabled: true
-    transfer-cooldown: 8 # ticks
-    max-hoppers-per-chunk: 20
-  
+    enabled: false
+    transfer-cooldown: 8    # ticks between transfers
+    max-hoppers-per-chunk: 0  # 0 = disabled
+```
+
+##### Spawner Limiter
+```yaml
   spawner-limiter:
-    enabled: true
+    enabled: false
     spawn-delay-multiplier: 1.5
-    max-spawners-per-chunk: 10
 ```
 
 #### Misc Entity Limiter: Protect named/tagged entities

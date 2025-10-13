@@ -7,6 +7,7 @@ import com.tcoded.folialib.wrapper.task.WrappedTask;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -85,6 +86,11 @@ public class GUIManager implements Listener {
         }
     }
 
+    // Helper method to create non-italic lore text
+    private Component lore(String text, NamedTextColor color) {
+        return Component.text(text).color(color).decoration(TextDecoration.ITALIC, false);
+    }
+
     public void openMainGUI(@NotNull Player player) {
         Inventory gui = Bukkit.createInventory(new GUIHolder("main"), 27, Component.text("ClearLaggEnhanced Admin Panel").color(NamedTextColor.DARK_GREEN));
 
@@ -94,12 +100,12 @@ public class GUIManager implements Listener {
         ItemMeta entityMeta = entityItem.getItemMeta();
         entityMeta.displayName(Component.text("Entity Clearing").color(NamedTextColor.RED));
         entityMeta.lore(Arrays.asList(
-                Component.text("Configure entity clearing settings").color(NamedTextColor.GRAY),
-                Component.text("• Intervals and timings").color(NamedTextColor.YELLOW),
-                Component.text("• Entity whitelist/blacklist").color(NamedTextColor.YELLOW),
-                Component.text("• World configurations").color(NamedTextColor.YELLOW),
+                lore("Configure entity clearing settings", NamedTextColor.GRAY),
+                lore("• Intervals and timings", NamedTextColor.YELLOW),
+                lore("• Entity whitelist/blacklist", NamedTextColor.YELLOW),
+                lore("• World configurations", NamedTextColor.YELLOW),
                 Component.empty(),
-                Component.text("Click to open settings").color(NamedTextColor.GREEN)
+                lore("Click to open settings", NamedTextColor.GREEN)
         ));
         entityItem.setItemMeta(entityMeta);
         gui.setItem(12, entityItem);
@@ -108,13 +114,13 @@ public class GUIManager implements Listener {
         ItemMeta lagMeta = lagItem.getItemMeta();
         lagMeta.displayName(Component.text("Lag Prevention").color(NamedTextColor.GOLD));
         lagMeta.lore(Arrays.asList(
-                Component.text("Configure lag prevention modules").color(NamedTextColor.GRAY),
-                Component.text("• Mob Limiter").color(NamedTextColor.YELLOW),
-                Component.text("• Redstone Limiter").color(NamedTextColor.YELLOW),
-                Component.text("• Hopper Limiter").color(NamedTextColor.YELLOW),
-                Component.text("• Spawner Limiter").color(NamedTextColor.YELLOW),
+                lore("Configure lag prevention modules", NamedTextColor.GRAY),
+                lore("• Mob Limiter (per-type limits)", NamedTextColor.YELLOW),
+                lore("• Redstone Limiter (lag machines)", NamedTextColor.YELLOW),
+                lore("• Hopper Limiter (transfer throttle)", NamedTextColor.YELLOW),
+                lore("• Spawner Limiter", NamedTextColor.YELLOW),
                 Component.empty(),
-                Component.text("Click to open settings").color(NamedTextColor.GREEN)
+                lore("Click to open settings", NamedTextColor.GREEN)
         ));
         lagItem.setItemMeta(lagMeta);
         gui.setItem(14, lagItem);
@@ -123,9 +129,9 @@ public class GUIManager implements Listener {
         ItemMeta reloadMeta = reloadItem.getItemMeta();
         reloadMeta.displayName(Component.text("Reload Config").color(NamedTextColor.AQUA));
         reloadMeta.lore(Arrays.asList(
-                Component.text("Reload configuration from file").color(NamedTextColor.GRAY),
+                lore("Reload configuration from file", NamedTextColor.GRAY),
                 Component.empty(),
-                Component.text("Click to reload").color(NamedTextColor.GREEN)
+                lore("Click to reload", NamedTextColor.GREEN)
         ));
         reloadItem.setItemMeta(reloadMeta);
         gui.setItem(16, reloadItem);
@@ -151,13 +157,13 @@ public class GUIManager implements Listener {
 
         performanceMeta.displayName(Component.text("Performance Monitoring").color(NamedTextColor.BLUE));
         performanceMeta.lore(Arrays.asList(
-                Component.text("Real-time server statistics").color(NamedTextColor.GRAY),
+                lore("Real-time server statistics", NamedTextColor.GRAY),
                 Component.empty(),
-                Component.text("TPS: " + String.format("%.2f", tps)).color(tpsColor),
-                Component.text("Memory: " + memoryUsage + " (" + String.format("%.1f", memoryPercent) + "%)").color(memoryColor),
-                Component.text("Entities: " + totalEntities).color(NamedTextColor.YELLOW),
+                lore("TPS: " + String.format("%.2f", tps), tpsColor),
+                lore("Memory: " + memoryUsage + " (" + String.format("%.1f", memoryPercent) + "%)", memoryColor),
+                lore("Entities: " + totalEntities, NamedTextColor.YELLOW),
                 Component.empty(),
-                Component.text("Updates every 2 seconds").color(NamedTextColor.DARK_GRAY)
+                lore("Updates every 2 seconds", NamedTextColor.DARK_GRAY)
         ));
 
         performanceItem.setItemMeta(performanceMeta);
@@ -180,28 +186,28 @@ public class GUIManager implements Listener {
         ItemStack toggleItem = new ItemStack(enabled ? Material.GREEN_WOOL : Material.RED_WOOL);
         ItemMeta toggleMeta = toggleItem.getItemMeta();
         toggleMeta.displayName(Component.text("Entity Clearing: " + (enabled ? "Enabled" : "Disabled")).color(enabled ? NamedTextColor.GREEN : NamedTextColor.RED));
-        toggleMeta.lore(Collections.singletonList(Component.text("Click to " + (enabled ? "disable" : "enable")).color(NamedTextColor.GRAY)));
+        toggleMeta.lore(Collections.singletonList(lore("Click to " + (enabled ? "disable" : "enable"), NamedTextColor.GRAY)));
         toggleItem.setItemMeta(toggleMeta);
         gui.setItem(10, toggleItem);
 
         ItemStack intervalItem = new ItemStack(Material.CLOCK);
         ItemMeta intervalMeta = intervalItem.getItemMeta();
         intervalMeta.displayName(Component.text("Clearing Interval: " + interval + "s").color(NamedTextColor.YELLOW));
-        intervalMeta.lore(Arrays.asList(Component.text("Current interval: " + interval + " seconds").color(NamedTextColor.GRAY), Component.empty(), Component.text("Click to change").color(NamedTextColor.GREEN)));
+        intervalMeta.lore(Arrays.asList(lore("Current interval: " + interval + " seconds", NamedTextColor.GRAY), Component.empty(), lore("Click to change", NamedTextColor.GREEN)));
         intervalItem.setItemMeta(intervalMeta);
         gui.setItem(12, intervalItem);
 
         ItemStack namedItem = new ItemStack(protectNamed ? Material.NAME_TAG : Material.PAPER);
         ItemMeta namedMeta = namedItem.getItemMeta();
         namedMeta.displayName(Component.text("Protect Named: " + (protectNamed ? "Yes" : "No")).color(protectNamed ? NamedTextColor.GREEN : NamedTextColor.RED));
-        namedMeta.lore(Collections.singletonList(Component.text("Click to " + (protectNamed ? "disable" : "enable")).color(NamedTextColor.GRAY)));
+        namedMeta.lore(Collections.singletonList(lore("Click to " + (protectNamed ? "disable" : "enable"), NamedTextColor.GRAY)));
         namedItem.setItemMeta(namedMeta);
         gui.setItem(14, namedItem);
 
         ItemStack tamedItem = new ItemStack(protectTamed ? Material.BONE : Material.STICK);
         ItemMeta tamedMeta = tamedItem.getItemMeta();
         tamedMeta.displayName(Component.text("Protect Tamed: " + (protectTamed ? "Yes" : "No")).color(protectTamed ? NamedTextColor.GREEN : NamedTextColor.RED));
-        tamedMeta.lore(Collections.singletonList(Component.text("Click to " + (protectTamed ? "disable" : "enable")).color(NamedTextColor.GRAY)));
+        tamedMeta.lore(Collections.singletonList(lore("Click to " + (protectTamed ? "disable" : "enable"), NamedTextColor.GRAY)));
         tamedItem.setItemMeta(tamedMeta);
         gui.setItem(16, tamedItem);
 
@@ -226,28 +232,43 @@ public class GUIManager implements Listener {
         ItemStack mobItem = new ItemStack(mobLimiter ? Material.GREEN_WOOL : Material.RED_WOOL);
         ItemMeta mobMeta = mobItem.getItemMeta();
         mobMeta.displayName(Component.text("Mob Limiter: " + (mobLimiter ? "Enabled" : "Disabled")).color(mobLimiter ? NamedTextColor.GREEN : NamedTextColor.RED));
-        mobMeta.lore(Arrays.asList(Component.text("Max mobs per chunk: " + maxMobs).color(NamedTextColor.GRAY), Component.empty(), Component.text("Click to " + (mobLimiter ? "disable" : "enable")).color(NamedTextColor.YELLOW)));
+        mobMeta.lore(Arrays.asList(
+                lore("Limits mob spawns per chunk", NamedTextColor.GRAY),
+                lore("Global: " + maxMobs + " mobs/chunk", NamedTextColor.GRAY),
+                lore("Per-type limits in config.yml", NamedTextColor.DARK_GRAY),
+                Component.empty(),
+                lore("Click to " + (mobLimiter ? "disable" : "enable"), NamedTextColor.YELLOW)));
         mobItem.setItemMeta(mobMeta);
         gui.setItem(10, mobItem);
 
         ItemStack redstoneItem = new ItemStack(redstoneLimiter ? Material.GREEN_WOOL : Material.RED_WOOL);
         ItemMeta redstoneMeta = redstoneItem.getItemMeta();
         redstoneMeta.displayName(Component.text("Redstone Limiter: " + (redstoneLimiter ? "Enabled" : "Disabled")).color(redstoneLimiter ? NamedTextColor.GREEN : NamedTextColor.RED));
-        redstoneMeta.lore(Collections.singletonList(Component.text("Click to " + (redstoneLimiter ? "disable" : "enable")).color(NamedTextColor.YELLOW)));
+        redstoneMeta.lore(Arrays.asList(
+                lore("Prevents redstone lag machines", NamedTextColor.GRAY),
+                lore("Limits pistons, dispensers, etc", NamedTextColor.DARK_GRAY),
+                lore("Per-block-type limits per tick", NamedTextColor.DARK_GRAY),
+                Component.empty(),
+                lore("Click to " + (redstoneLimiter ? "disable" : "enable"), NamedTextColor.YELLOW)));
         redstoneItem.setItemMeta(redstoneMeta);
         gui.setItem(12, redstoneItem);
 
         ItemStack hopperItem = new ItemStack(hopperLimiter ? Material.GREEN_WOOL : Material.RED_WOOL);
         ItemMeta hopperMeta = hopperItem.getItemMeta();
         hopperMeta.displayName(Component.text("Hopper Limiter: " + (hopperLimiter ? "Enabled" : "Disabled")).color(hopperLimiter ? NamedTextColor.GREEN : NamedTextColor.RED));
-        hopperMeta.lore(Collections.singletonList(Component.text("Click to " + (hopperLimiter ? "disable" : "enable")).color(NamedTextColor.YELLOW)));
+        hopperMeta.lore(Arrays.asList(
+                lore("Throttles hopper item transfers", NamedTextColor.GRAY),
+                lore("Adds cooldown between transfers", NamedTextColor.DARK_GRAY),
+                lore("Independent from redstone limiter", NamedTextColor.DARK_GRAY),
+                Component.empty(),
+                lore("Click to " + (hopperLimiter ? "disable" : "enable"), NamedTextColor.YELLOW)));
         hopperItem.setItemMeta(hopperMeta);
         gui.setItem(14, hopperItem);
 
         ItemStack spawnerItem = new ItemStack(spawnerLimiter ? Material.GREEN_WOOL : Material.RED_WOOL);
         ItemMeta spawnerMeta = spawnerItem.getItemMeta();
         spawnerMeta.displayName(Component.text("Spawner Limiter: " + (spawnerLimiter ? "Enabled" : "Disabled")).color(spawnerLimiter ? NamedTextColor.GREEN : NamedTextColor.RED));
-        spawnerMeta.lore(Collections.singletonList(Component.text("Click to " + (spawnerLimiter ? "disable" : "enable")).color(NamedTextColor.YELLOW)));
+        spawnerMeta.lore(Collections.singletonList(lore("Click to " + (spawnerLimiter ? "disable" : "enable"), NamedTextColor.YELLOW)));
         spawnerItem.setItemMeta(spawnerMeta);
         gui.setItem(16, spawnerItem);
 

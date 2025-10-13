@@ -34,9 +34,7 @@ public class HopperLimiterListener implements Listener {
     private final boolean enabled;
     private final int baseCooldownTicks;
     private final int maxHoppersPerChunk;
-    private final boolean debug;
     private final Map<String, Long> lastMoveTickByChunk = new ConcurrentHashMap<>();
-    private final Map<String, Long> lastLogTickByChunk = new ConcurrentHashMap<>();
     private final Map<String, Integer> hopperCountByChunk = new ConcurrentHashMap<>();
 
     public HopperLimiterListener(@NotNull ClearLaggEnhanced plugin) {
@@ -47,7 +45,6 @@ public class HopperLimiterListener implements Listener {
         this.enabled = configManager.getBoolean("lag-prevention.hopper-limiter.enabled", true);
         this.baseCooldownTicks = Math.max(1, configManager.getInt("lag-prevention.hopper-limiter.transfer-cooldown", 8));
         this.maxHoppersPerChunk = Math.max(0, configManager.getInt("lag-prevention.hopper-limiter.max-hoppers-per-chunk", 0));
-        this.debug = configManager.getBoolean("debug", false);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -83,7 +80,6 @@ public class HopperLimiterListener implements Listener {
         if ((now - last) < effectiveCooldown) {
             event.setCancelled(true);
             lastMoveTickByChunk.put(key, now);
-            maybeLogChunkThrottle(chunk, now);
             return;
         }
 
@@ -171,7 +167,6 @@ public class HopperLimiterListener implements Listener {
         String key = chunkKey(chunk);
         hopperCountByChunk.remove(key);
         lastMoveTickByChunk.remove(key);
-        lastLogTickByChunk.remove(key);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -214,34 +209,8 @@ public class HopperLimiterListener implements Listener {
                 scheduler.runAtLocation(location, task -> {
                     hopperCountByChunk.put(key, scanHoppersInChunk(chunk));
                     lastMoveTickByChunk.remove(key);
-                    lastLogTickByChunk.remove(key);
                 });
             }
         }
-    }
-
-    private void maybeLogChunkThrottle(@NotNull Chunk chunk, long nowTick) {
-        if (!debug) {
-            return;
-        }
-
-        String key = chunkKey(chunk);
-        long last = lastLogTickByChunk.getOrDefault(key, 1L);
-        if ((nowTick - last) >= 100L) {
-            Map<String, String> ph = new ConcurrentHashMap<>();
-            ph.put("x", String.valueOf(chunk.getX()));
-            ph.put("z", String.valueOf(chunk.getZ()));
-            var comp = plugin.getMessageManager().getMessage("debug.hopper.throttling", ph);
-            plugin.getServer().getOnlinePlayers().stream()
-                    .filter(player -> player.hasPermission("CLE.admin"))
-                    .forEach(player -> player.sendMessage(comp));
-            lastLogTickByChunk.put(key, nowTick);
-        }
-    }
-
-    private void debugAdmins(@NotNull String message) {
-        plugin.getServer().getOnlinePlayers().stream()
-                .filter(player -> player.hasPermission("CLE.admin"))
-                .forEach(player -> player.sendMessage(message));
     }
 }
