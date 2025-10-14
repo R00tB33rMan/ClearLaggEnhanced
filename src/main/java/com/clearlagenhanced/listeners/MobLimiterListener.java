@@ -16,7 +16,7 @@ import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MobLimiterListener implements Listener {
 
@@ -119,14 +119,15 @@ public class MobLimiterListener implements Listener {
             return false; // No limit configured for this type
         }
 
-        // Count entities of this specific type in the chunk
-        int count = 0;
+        // Count entities of this specific type in the chunk atomically
+        AtomicInteger count = new AtomicInteger(0);
+
         for (Entity entity : chunk.getEntities()) {
             if (entity.getType() == entityType && entity instanceof LivingEntity) {
-                count++;
+                count.incrementAndGet();
             }
         }
 
-        return count >= limit;
+        return count.get() >= limit;
     }
 }
