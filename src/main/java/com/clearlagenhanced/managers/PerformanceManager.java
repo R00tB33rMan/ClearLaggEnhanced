@@ -111,6 +111,42 @@ public class PerformanceManager {
             Location location = new Location(world, (cx << 4), 0, (cz << 4));
 
             scheduler.runAtLocation(location, task -> {
+                if (!world.isChunkLoaded(cx, cz)) {
+                    if (pending.decrementAndGet() == 0) {
+                        scheduler.runNextTick(nextTask -> {
+                            if (laggyChunks.isEmpty()) {
+                                Map<String, String> ph = new ConcurrentHashMap<>();
+                                ph.put("radius", String.valueOf(radius));
+                                MessageUtils.sendMessage(player, "chunkfinder.none-found", ph);
+                            } else {
+                                MessageUtils.sendMessage(player, "chunkfinder.header");
+
+                                laggyChunks.sort((a, b) -> Integer.compare(b.entityCount, a.entityCount));
+
+                                int maxResults = Math.min(laggyChunks.size(), 10);
+                                for (int i = 0; i < maxResults; i++) {
+                                    ChunkInfo chunkInfo = laggyChunks.get(i);
+
+                                    Map<String, String> ph = new ConcurrentHashMap<>();
+                                    ph.put("x", String.valueOf(chunkInfo.x));
+                                    ph.put("z", String.valueOf(chunkInfo.z));
+                                    ph.put("count", String.valueOf(chunkInfo.entityCount));
+                                    ph.put("distance", String.valueOf(chunkInfo.distance));
+                                    MessageUtils.sendMessage(player, "chunkfinder.entry", ph);
+                                }
+
+                                if (laggyChunks.size() > 10) {
+                                    Map<String, String> phMore = new ConcurrentHashMap<>();
+                                    phMore.put("more", String.valueOf(laggyChunks.size() - 10));
+                                    MessageUtils.sendMessage(player, "chunkfinder.more", phMore);
+                                }
+                            }
+                        });
+                    }
+
+                    return;
+                }
+
                 Chunk chunk = world.getChunkAt(cx, cz);
                 Entity[] entities = chunk.getEntities();
 

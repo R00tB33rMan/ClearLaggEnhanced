@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MiscEntityLimiterListener implements Listener {
 
@@ -83,14 +84,14 @@ public class MiscEntityLimiterListener implements Listener {
             return false;
         }
 
-        int count = 0;
+        AtomicInteger count = new AtomicInteger(0);
         for (Entity entity : chunk.getEntities()) {
             if (entity.getType() == type) {
-                count++;
+                count.incrementAndGet();
             }
         }
 
-        return count >= cap;
+        return count.get() >= cap;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

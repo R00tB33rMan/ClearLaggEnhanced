@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Smart Redstone Limiter inspired by RedstoneLimiter plugin
@@ -52,7 +53,7 @@ public class RedstoneLimiterListener implements Listener {
     // Chunk-level limiting
     private final boolean chunkLimitEnabled;
     private final int chunkThreshold;
-    private final Map<ChunkKey, Integer> chunkActivations = new ConcurrentHashMap<>();
+    private final Map<ChunkKey, AtomicInteger> chunkActivations = new ConcurrentHashMap<>();
 
     // Piston push limit
     private final int maxPistonPush;
@@ -147,12 +148,8 @@ public class RedstoneLimiterListener implements Listener {
         BlockKey key = new BlockKey(block.getLocation());
         BlockData data = blockActivations.computeIfAbsent(key, k -> new BlockData());
 
-        if (data.count >= threshold) {
-            return true; // Exceeded
-        }
-
-        data.count++;
-        return false; // Not exceeded
+        int prev = data.count.getAndUpdate(v -> v < threshold ? v + 1 : v);
+        return prev >= threshold;
     }
 
     private boolean checkChunkLimit(@NotNull Chunk chunk) {
@@ -165,14 +162,10 @@ public class RedstoneLimiterListener implements Listener {
         }
 
         ChunkKey key = new ChunkKey(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
-        int count = chunkActivations.getOrDefault(key, 0);
+        AtomicInteger counter = chunkActivations.computeIfAbsent(key, k -> new AtomicInteger(0));
 
-        if (count >= chunkThreshold) {
-            return true; // Exceeded
-        }
-
-        chunkActivations.put(key, count + 1);
-        return false; // Not exceeded
+        int prev = counter.getAndUpdate(v -> v < chunkThreshold ? v + 1 : v);
+        return prev >= chunkThreshold;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -295,6 +288,6 @@ public class RedstoneLimiterListener implements Listener {
 
     // Block activation data
     private static class BlockData {
-        int count = 0;
+        final AtomicInteger count = new AtomicInteger(0);
     }
 }
